@@ -7,7 +7,7 @@ const ItemProduct = ({ product }) => {
 
     return (
         <View className={'w-full  rounded-2xl h-20 mt-2 bg-white'}>
-            <TouchableOpacity  onPress={()=>router.push(`product/${product.id}`)} >
+            <TouchableOpacity  onPress={()=> router.push(`/product/${product.id}`)} >
             <View className={'flex flex-row'}>
                 <View className={'w-10/12 p-2'}>
                     <View className={' pl-2 '}>
