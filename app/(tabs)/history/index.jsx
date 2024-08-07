@@ -1,10 +1,10 @@
 import {Text, View} from "react-native";
 
-const HistoryPage = () => {
+const History = () => {
     return(
         <View>
             <Text>Histopry</Text>
         </View>
     )
 }
-export default HistoryPage;
+export default History;

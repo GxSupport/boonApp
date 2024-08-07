@@ -1,7 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import {View, Text, Touchable, TouchableOpacity} from "react-native";
 import {useEffect, useState} from "react";
-import {router} from "expo-router";
+import {Redirect, router} from "expo-router";
 import * as Secure from 'expo-secure-store';
 
 
@@ -37,20 +37,7 @@ export default function Index() {
 
     }, [progress,token, router]);
 
-    return (
-        <View className="flex-1 justify-center items-center bg-blue-400">
-            <Text className="mt-64 text-3xl text-white font-bold">BOON</Text>
-            <Text className={'mt-72 text-center text-white'} >Loading...</Text>
-
-
-
-
-            <StatusBar style="auto" />
-
-
-
-        </View>
-    );
+    return <Redirect href={'home'} />;
 }
 
 

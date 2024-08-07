@@ -11,7 +11,7 @@ import {
     PacmanIndicator,
     PulseIndicator, SkypeIndicator
 } from "react-native-indicators";
-import {router} from "expo-router";
+import {Redirect, router} from "expo-router";
 
 
 const Login = () => {
@@ -24,7 +24,9 @@ const Login = () => {
         setLoading(true);
         router.push('home');
     }
-
+    if (!loading) {
+        <Redirect href={'home'}/>
+    }
     return (
     <View className={'flex-1 justify-center w-full items-center bg-bg-default'}>
         <View className={'w-11/12'}>
