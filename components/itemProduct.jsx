@@ -1,13 +1,27 @@
-import {Text, TouchableOpacity, View} from "react-native";
+import {Alert, Text, TouchableOpacity, View} from "react-native";
 import {formatSum} from "../utils/formatSum";
-import {MaterialIcons} from "@expo/vector-icons";
+import {Entypo, MaterialIcons} from "@expo/vector-icons";
 import {router} from "expo-router";
 
-const ItemProduct = ({ product }) => {
+const ItemProduct = ({ product, page }) => {
+    const deleteProduct = () => {
 
+        Alert.alert(
+            "Удаление товара",
+            "Вы уверены, что хотите удалить товар?",
+            [
+                {
+                    text: "Отмена",
+                    onPress: () => console.log("Cancel Pressed"),
+                    style: "cancel"
+                },
+                { text: "Удалить", onPress: () => console.log("OK Pressed") }
+            ]
+        );
+    }
     return (
-        <View className={'w-full  rounded-2xl h-20 mt-2 bg-white'}>
-            <TouchableOpacity  onPress={()=> router.push(`/product/${product.id}`)} >
+        <View className={'w-full   rounded-2xl h-20 mt-4 bg-white'}>
+
             <View className={'flex flex-row'}>
                 <View className={'w-10/12 p-2'}>
                     <View className={' pl-2 '}>
@@ -24,10 +38,18 @@ const ItemProduct = ({ product }) => {
                     </View>
                 </View>
                 <View className={'w-2/12 items-center justify-center'}>
-                    <Text> <MaterialIcons name={'navigate-next'} size={28} color={'gray'}/> </Text>
+                    {page==='home'?
+                        <TouchableOpacity  onPress={()=> router.push(`/product/${product.id}`)} >
+                            <MaterialIcons name={'navigate-next'} size={28} color={'gray'}/>
+                        </TouchableOpacity>
+                        :
+                        <TouchableOpacity  onPress={deleteProduct} >
+                            <Entypo name={'cross'} size={20} color={'gray'}/>
+                        </TouchableOpacity>
+                    }
                 </View>
             </View>
-            </TouchableOpacity>
+
         </View>
     );
 }

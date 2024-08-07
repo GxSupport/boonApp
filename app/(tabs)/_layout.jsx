@@ -7,11 +7,23 @@ import {TouchableOpacity, View} from "react-native";
 export default ()=>{
     return<Tabs
                 screenOptions={{
-                    tabBarActiveTintColor: '#007FFF',
+
                     tabBarStyle: {
                         backgroundColor: 'white',
                         height: 60,
                         position: 'absolute',
+                        borderTopWidth: 0,
+                        borderTopColor: 'transparent',
+                        shadowColor: "#000",
+                        shadowOffset: {
+                            width: 0,
+                            height: 0,
+                        },
+                        shadowOpacity: 0,
+                        shadowRadius: 0,
+                        elevation: 0,
+
+                        zIndex: 0,
                     }
                 }}
             >
@@ -48,4 +60,5 @@ export default ()=>{
                     tabBarShowLabel: false
                 }} />
            </Tabs>
+
 }

@@ -44,7 +44,7 @@ const home = () => {
             {/*</View>*/}
             <View className={'pt-5 w-full justify-center items-center overflow-visible h-22'}>
                 <Limit limit={10000000}/>
-                <ProgressLimit used={7020000} limit={10000000}/>
+                <ProgressLimit used={7020000} limit={10000000} page={'home'}/>
             </View>
             <View className={'mt-5 justify-start items-start w-11/12 '}>
                 <View className={'pt-2'}>
@@ -59,7 +59,7 @@ const home = () => {
                     <View className={'pt-2 w-full'}>
                         <FlatList
                             data={data} renderItem={
-                            ({item}) => (<ItemProduct product={item}/>)
+                            ({item}) => (<ItemProduct product={item} page={'home'}/>)
                         } keyExtractor={(item) => item.title}/>
                     </View>
                 }
