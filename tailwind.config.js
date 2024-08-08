@@ -10,6 +10,8 @@ module.exports = {
         'btn-primary': '#007FFF',
         'border-1': '#EBEBEB',
         'blue-300-1': '#00B7FF99',
+        'bg-icon': '#D6EEFF',
+        'bg-logout': '#F8EAEF',
 
 
       },
@@ -19,7 +21,8 @@ module.exports = {
       },
       textColor:{
         'black': '#171717',
-        'gray':'#737373'
+        'gray':'#737373',
+        'logout':'#FF5865',
       },
       fontSize:{
         '11': '11px',
