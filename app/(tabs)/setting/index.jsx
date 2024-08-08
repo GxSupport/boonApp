@@ -65,7 +65,9 @@ const SettingPage = () => {
                         </View>
                     </View>
                     <View className={'w-2/12'}>
-                        <Entypo name={'chevron-right'} size={24} color={'gray'}/>
+                        <TouchableOpacity onPress={()=> router.push(`/setting/security/${account.id}`)}>
+                            <Entypo name={'chevron-right'} size={24} color={'gray'}/>
+                        </TouchableOpacity>
                     </View>
                 </View>
 
@@ -79,7 +81,9 @@ const SettingPage = () => {
                         </View>
                     </View>
                     <View className={'w-2/12'}>
-                        <Entypo name={'chevron-right'} size={24} color={'gray'}/>
+                        <TouchableOpacity onPress={()=> router.push(`/setting/decor/${account.id}`)}>
+                            <Entypo name={'chevron-right'} size={24} color={'gray'}/>
+                        </TouchableOpacity>
                     </View>
                 </View>
 

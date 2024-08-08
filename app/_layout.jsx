@@ -1,5 +1,6 @@
 import {Stack} from "expo-router";
 import {View} from "react-native";
+import {Ionicons} from "@expo/vector-icons";
 
 const IndexStact = () => {
 
@@ -14,7 +15,8 @@ const IndexStact = () => {
         <Stack.Screen name="setting/account/[id]" options={{
             headerBackTitleVisible: false,
             headerBackground: () => <View className={'bg-bg-default h-full'} />,
-            headerTitle:'Настройки аккаунта'
+            headerTitle:'Настройки аккаунта',
+            headerTitleAlign:'center'
         }} />
         <Stack.Screen name="setting/payments/[id]" options={{
             headerBackTitleVisible: false,
@@ -24,12 +26,15 @@ const IndexStact = () => {
         <Stack.Screen name="setting/security/[id]" options={{
             headerBackTitleVisible: false,
             headerBackground: () => <View className={'bg-bg-default h-full'} />,
-            headerTitle:'Безопасность'
+            headerTitle:'Безопасность',
+            headerTitleAlign:'center'
         }} />
         <Stack.Screen name="setting/decor/[id]" options={{
             headerBackTitleVisible: false,
             headerBackground: () => <View className={'bg-bg-default h-full'} />,
-            headerTitle:'Оформление'
+            headerTitle:'Оформление',
+            headerTitleAlign:'center',
+
         }} />
 
 
