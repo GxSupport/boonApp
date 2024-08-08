@@ -1,4 +1,4 @@
-import {FlatList, Text, View} from "react-native";
+import {FlatList, Platform, Text, View} from "react-native";
 import ProgressLimit from "../../../components/progressLimit";
 import ItemProduct from "../../../components/itemProduct";
 import {useState} from "react";
@@ -26,6 +26,7 @@ const Basket = () => {
             type:"Смартфон"
         }
     ]);
+    const platform = Platform.OS;
     return (
         <View className={'flex-1   pt-3 items-center bg-bg-default relative '}>
             <ProgressLimit used={7020000} limit={10000000} page={'basket'}/>
@@ -56,7 +57,10 @@ const Basket = () => {
                     </View>
                 }
             </View>
-            <View className={'w-full  absolute rounded-t-3xl bg-white h-28 z-10  bottom-14'}>
+            <View className={
+                platform=== 'ios' ? 'w-full  absolute rounded-t-3xl bg-white h-28 z-10  bottom-20' :
+                    'w-full  absolute rounded-t-3xl bg-white h-28 z-10  bottom-14'
+            }>
                 <View className={'flex flex-row  m-3'}>
                     <View className={'flex-1'}>
                         <Text className={'text-15 text-gray'}>Итого:</Text>

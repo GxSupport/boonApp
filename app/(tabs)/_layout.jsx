@@ -1,16 +1,18 @@
 import {Tabs} from "expo-router";
 import {FontAwesome6, Ionicons, MaterialCommunityIcons} from "@expo/vector-icons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import {TouchableOpacity, View} from "react-native";
+import {Platform, TouchableOpacity, View} from "react-native";
 
 
 export default ()=>{
+    const platform = Platform.OS;
+    console.log(platform)
     return<Tabs
                 screenOptions={{
 
                     tabBarStyle: {
                         backgroundColor: 'white',
-                        height: 60,
+                        height: platform=== 'ios' ? 90 : 60,
                         position: 'absolute',
                         borderTopWidth: 0,
                         borderTopColor: 'transparent',
