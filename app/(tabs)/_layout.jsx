@@ -6,26 +6,20 @@ import {Platform, TouchableOpacity, View} from "react-native";
 
 export default ()=>{
     const platform = Platform.OS;
-    console.log(platform)
     return<Tabs
                 screenOptions={{
-
                     tabBarStyle: {
                         backgroundColor: 'white',
                         height: platform=== 'ios' ? 90 : 60,
-                        position: 'absolute',
+
                         borderTopWidth: 0,
                         borderTopColor: 'transparent',
                         shadowColor: "#000",
-                        shadowOffset: {
-                            width: 0,
-                            height: 0,
-                        },
+
                         shadowOpacity: 0,
                         shadowRadius: 0,
                         elevation: 0,
 
-                        zIndex: 0,
                     }
                 }}
             >

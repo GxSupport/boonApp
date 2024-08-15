@@ -42,7 +42,6 @@ const Account = () => {
                         <Entypo name={'pencil'} size={18} color={'white'}/>
                     </View>
                 </View>
-
             </View>
             </TouchableOpacity>
             <View className={'mt-10  justify-center items-center w-full'}>
@@ -94,7 +93,7 @@ const Account = () => {
                     </View>
                 </View>
             </View>
-            <View className={'h-12 rounded-lg bg-btn-primary justify-center absolute bottom-16  w-11/12'}>
+            <View className={'h-12 rounded-lg bg-btn-primary justify-center absolute bottom-5  w-11/12'}>
                 <Text className={'text-center text-white'}>Сохранить данные</Text>
             </View>
 
