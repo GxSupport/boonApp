@@ -42,7 +42,6 @@ const Account = () => {
                         <Entypo name={'pencil'} size={18} color={'white'}/>
                     </View>
                 </View>
-
             </View>
             </TouchableOpacity>
             <View className={'mt-10  justify-center items-center w-full'}>
