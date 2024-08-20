@@ -1,7 +1,7 @@
-import {Alert, Text, TouchableOpacity, View} from "react-native";
-import {formatSum} from "../utils/formatSum";
-import {Entypo, MaterialIcons} from "@expo/vector-icons";
-import {router} from "expo-router";
+import { Alert, Text, TouchableOpacity, View } from "react-native";
+import { formatSum } from "../utils/formatSum";
+import { Entypo, MaterialIcons } from "@expo/vector-icons";
+import { router } from "expo-router";
 
 const ItemProduct = ({ product, page }) => {
     const deleteProduct = () => {
@@ -21,7 +21,6 @@ const ItemProduct = ({ product, page }) => {
     }
     return (
         <View className={'w-full   rounded-2xl h-20 mt-4 bg-white'}>
-
             <View className={'flex flex-row'}>
                 <View className={'w-10/12 p-2'}>
                     <View className={' pl-2 '}>
@@ -38,18 +37,17 @@ const ItemProduct = ({ product, page }) => {
                     </View>
                 </View>
                 <View className={'w-2/12 items-center justify-center'}>
-                    {page==='home'?
-                        <TouchableOpacity  onPress={()=> router.push(`/product/${product.id}`)} >
-                            <MaterialIcons name={'navigate-next'} size={28} color={'gray'}/>
+                    {page === 'home' ?
+                        <TouchableOpacity onPress={() => router.push(`/product/${product.id}`)} >
+                            <MaterialIcons name={'navigate-next'} size={28} color={'gray'} />
                         </TouchableOpacity>
                         :
-                        <TouchableOpacity  onPress={deleteProduct} >
-                            <Entypo name={'cross'} size={20} color={'gray'}/>
+                        <TouchableOpacity onPress={deleteProduct} >
+                            <Entypo name={'cross'} size={20} color={'gray'} />
                         </TouchableOpacity>
                     }
                 </View>
             </View>
-
         </View>
     );
 }

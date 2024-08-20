@@ -8,8 +8,6 @@ export default ()=>{
             headerTitleAlign: 'center',
             headerTitle: 'Главная',
             headerTitleStyle: {color: 'black', fontSize: 19},
-
         }}/>
-
     </Stack>
 }

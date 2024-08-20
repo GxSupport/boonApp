@@ -1,11 +1,11 @@
-import {View, Text, Button} from "react-native";
-import {CameraView, useCameraPermissions} from "expo-camera";
-import React, {useState} from "react";
-import {requestCameraPermissionsAsync} from "expo-camera/legacy";
-import {router} from "expo-router";
-import {Entypo} from "@expo/vector-icons";
+import { View, Text, Button } from "react-native";
+import { CameraView, useCameraPermissions } from "expo-camera";
+import React, { useState } from "react";
+import { requestCameraPermissionsAsync } from "expo-camera/legacy";
+import { router } from "expo-router";
+import { Entypo } from "@expo/vector-icons";
 
-export default  function Scan(){
+export default function Scan() {
     const [hasPermission, setHasPermission] = useCameraPermissions();
     const successCode = (barcode) => {
         console.log(barcode)
@@ -18,11 +18,11 @@ export default  function Scan(){
     if (!hasPermission.granted) {
         return <View>
             <Text>Для сканирования QR кода необходимо разрешение на использование камеры</Text>
-            <Button title={'Разрешить'} onPress={requestCameraPermissionsAsync}/>
+            <Button title={'Разрешить'} onPress={requestCameraPermissionsAsync} />
         </View>
     }
 
-    return(
+    return (
         <View>
             <CameraView
                 onBarcodeScanned={(barcode) => successCode(barcode)}
@@ -35,14 +35,9 @@ export default  function Scan(){
                 }}
                 BarcodeSize={{
                     height: 200,
-                    width:200
+                    width: 200
 
                 }}
-
-
-
-
-
                 className={'w-full h-full'}
             ></CameraView>
         </View>
