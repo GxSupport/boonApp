@@ -1,14 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
-import { View, Text, Touchable, TouchableOpacity } from "react-native";
+import { View, Text, Touchable } from "react-native";
 import { useEffect, useState } from "react";
 import { Redirect, router } from "expo-router";
 import * as Secure from 'expo-secure-store';
-
 export default function Index() {
     const [progress, setProgress] = useState(0);
-
     const [token, setToken] = useState(null);
-
     useEffect(() => {
         Secure.setItem('access_token', 'test');
         const interval = setInterval(() => {
