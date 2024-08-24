@@ -7,7 +7,7 @@ node_modules/
 .expo/
 dist/
 web-build/
-
+yarn.lock
 # Native
 *.orig.*
 *.jks
