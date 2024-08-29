@@ -5,7 +5,6 @@ import { router } from "expo-router";
 
 const ItemProduct = ({ product, page }) => {
     const deleteProduct = () => {
-
         Alert.alert(
             "Удаление товара",
             "Вы уверены, что хотите удалить товар?",
@@ -24,21 +23,21 @@ const ItemProduct = ({ product, page }) => {
             <View className={'flex flex-row'}>
                 <View className={'w-10/12 p-2'}>
                     <View className={' pl-2 '}>
-                        <Text className={'text-15 text-black font-bold'}>{product.title}</Text>
+                        <Text className={'text-15 text-black font-bold'}>{product.item?.month_text}</Text>
                     </View>
                     <View className={' pl-2 pt-0.5'}>
-                        <Text className={'text-13 text-gray '}>{product.type}</Text>
+                        <Text className={'text-13 text-gray '}>prepayment: {product.item?.prepayment}</Text>
                     </View>
                     <View className={' pl-2 pt-0.5'}>
                         <View className={'flex flex-row'}>
-                            <Text className={'text-15 text-black font-bold'}>{formatSum(product.price)}</Text>
+                            <Text className={'text-15 text-black font-bold'}>{formatSum(product.item?.limit)}</Text>
                             <Text className={'text-15 text-gray'}> UZS</Text>
                         </View>
                     </View>
                 </View>
                 <View className={'w-2/12 items-center justify-center'}>
                     {page === 'home' ?
-                        <TouchableOpacity onPress={() => router.push(`/product/${product.id}`)} >
+                        <TouchableOpacity onPress={() => router.push(`/product/${product?.id}`)} >
                             <MaterialIcons name={'navigate-next'} size={28} color={'gray'} />
                         </TouchableOpacity>
                         :

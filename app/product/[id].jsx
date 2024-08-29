@@ -1,73 +1,62 @@
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import InfoProduct from "../../components/infoProduct";
+import { router } from "expo-router";
+import { useRoute } from "@react-navigation/native";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { Token, URL } from "../../api/const";
+import Loading from "../../components/Loading";
 const id = () => {
-    const info = {
-        id: 1,
-        title: 'Samsung Galaxy S21',
-        type: 'Смартфон',
-        price: 1000000,
-        description: 'Samsung Galaxy S21 - это смартфон с 6.2-дюймовым дисплеем, процессором Exynos 2100, 8 ГБ оперативной памяти и 128 ГБ встроенной памяти, тройной основной камерой на 64+12+12 Мп и фронтальной камерой на 10 Мп, аккумулятором на 4000 мАч, поддержкой 5G и работающий на Android 11.'
-    }
-    const fullInfos = [
-        {
-            title: 'Операционная система',
-            description: 'Android 11'
-        },
-        {
-            title: 'Процессор',
-            description: 'Exynos 2100'
-        },
-        {
-            title: 'Оперативная память',
-            description: '8 ГБ'
-        },
-        {
-            title: 'Встроенная память',
-            description: '128 ГБ'
-        },
-        {
-            title: 'Дисплей',
-            description: '6.2 дюйма'
-        },
-        {
-            title: 'Камера',
-            description: '64+12+12 Мп'
-        },
-        {
-            title: 'Фронтальная камера',
-            description: '10 Мп'
-        },
-        {
-            title: 'Аккумулятор',
-            description: '4000 мАч'
-        },
-        {
-            title: 'Поддержка 5G',
-            description: 'Да'
-        }
+    const [isLoading, setLoading] = useState(false)
 
-    ]
+    const [singleInfo, setSingleInfo] = useState(null)
+    const { params } = useRoute();
+
+    const getSingleProduct = async () => {
+        setLoading(true)
+        if (params.id) {
+            try {
+                const res = await axios(`${URL}/application/get/${params.id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${Token}`,
+                    }
+                });
+                console.log(JSON.stringify(res.data.task, null, 2));
+                setSingleInfo(res.data?.task)
+            } catch (error) {
+                console.log(error);
+            }
+            finally {
+                setLoading(false)
+            }
+        }
+    }
+    useEffect(() => {
+        getSingleProduct()
+    }, [params.id])
+
     return (
         <View className={'bg-bg-default flex justify-center items-center'}>
             <View className={' w-11/12'}>
                 <View className={'pt-5'}>
-                    <Text className={'text-17 text-black'}>{info.title}</Text>
+                    <Text className={'text-17 text-black'}>{singleInfo?.status_name}</Text>
                 </View>
-
                 <View className={'pt-5'}>
                     <Text className={'text-15 text-black'}>О товаре</Text>
                 </View>
                 <View className={'pt-2'}>
-                    <Text className={'text-13 text-gray'}>{info.description}</Text>
+                    <Text className={'text-13 text-gray'}>{singleInfo?.products[0].product}
+                    </Text>
                 </View>
                 <View className={'pt-5'}>
                     <Text className={'text-15 text-black'}>Подробности</Text>
                 </View>
                 <View className={'pt-2'}>
+                    <Loading loading={isLoading} />
                     <FlatList
-                        data={fullInfos}
-                        renderItem={({ item }) => (<InfoProduct info={item} />)}
-                        keyExtractor={(item) => item.title}
+                        data={singleInfo?.products}
+                        renderItem={({ item, index }) => (<InfoProduct info={item} />)}
+                        keyExtractor={(_, index) => index.toString()}
                     />
                 </View>
             </View>
@@ -81,3 +70,4 @@ const id = () => {
     )
 }
 export default id;
+
