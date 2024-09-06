@@ -5,59 +5,13 @@ import { useState } from "react";
 import { Entypo } from "@expo/vector-icons";
 import { formatSum } from "../../../utils/formatSum";
 import { router } from "expo-router";
+import { useSelector } from "react-redux";
 
 const Basket = () => {
-    const [data, setData] = useState([
-        {
-            id: 1,
-            title: "Dyson V11 Absolute",
-            price: "8230500",
-            type: "Пылесос"
-        },
-        {
-            id: 2,
-            title: "Bosch WAT 2333",
-            price: "2150200",
-            type: "Стиральная машина"
-        },
-        {
-            id: 3,
-            title: "Huawei P40 Pro",
-            price: "1410500",
-            type: "Смартфон"
-        },
-        {
-            id: 4,
-            title: "Dyson V111 Absolute",
-            price: "8230500",
-            type: "Пылесос"
-        },
-        {
-            id: 5,
-            title: "Bosch WAT1 2333",
-            price: "2150200",
-            type: "Стиральная машина"
-        },
-        {
-            id: 6,
-            title: "Huawei P401 Pro",
-            price: "1410500",
-            type: "Смартфон"
-        },
-        {
-            id: 7,
-            title: "Huawei P411 Pro",
-            price: "1410500",
-            type: "Смартфон"
-        },
-        {
-            id: 8,
-            title: "Huawei P412 Pro",
-            price: "1410500",
-            type: "Смартфон"
-        }
-    ]);
+
+    const { basket } = useSelector(state => state.ProductSlicer)
     const platform = Platform.OS;
+
     return (
         <SafeAreaView className={'items-center bg-bg-default h-full'}>
             <ProgressLimit used={7020000} limit={10000000} page={'basket'} />
@@ -68,21 +22,21 @@ const Basket = () => {
                     </View>
                     <View className={'mt-1 -ml-2 flex flex-row'}>
                         <Entypo name={'dot-single'} size={16} color={'gray'} />
-                        <Text className={'text-gray -mt-0.5 -ml-1  text-13'}>{data.length} товара</Text>
+                        <Text className={'text-gray -mt-0.5 -ml-1  text-13'}>{basket.length} товара</Text>
                     </View>
                 </View>
-                {data.length === 0 &&
+                {basket.length === 0 &&
                     <View className={'  mr-3 '}>
                         <Text className={'text-gray text-15 text-center'}>Сканируйте QR код, чтобы добавить товар в список</Text>
                     </View>
                 }
-                {data.length > 0 &&
+                {basket.length > 0 &&
                     <ScrollView>
                         <View className={platform === 'ios' ? ' w-full' : 'w-full h-full   '}>
                             <FlatList
-                                data={data} renderItem={
-                                    ({ item }) => (<ItemProduct product={item} page={'basket'} />)
-                                } keyExtractor={(item) => item.title}
+                                data={basket} renderItem={
+                                    ({ item }) => (<ItemProduct prop={item} page={'basket'} />)
+                                } keyExtractor={(_, index) => index.toString()}
                                 scrollEnabled={false}
                             />
                         </View>
@@ -99,7 +53,7 @@ const Basket = () => {
                     </View>
                     <View className={'flex-1 items-end'}>
                         <View className={'flex flex-row'}>
-                            <Text className={'text-15 text-black font-bold'}>{formatSum(14122000)}</Text>
+                            <Text className={'text-15 text-black font-bold'}>{formatSum(basket.reduce((a, b) => a + parseFloat(b?.sale_price), 0))}</Text>
                             <Text className={'ml-1 text-gray'}>UZS</Text>
                         </View>
 

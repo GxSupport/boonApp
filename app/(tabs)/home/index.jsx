@@ -1,75 +1,157 @@
-import { Animated, FlatList, SafeAreaView, ScrollView, Text, TouchableWithoutFeedback, View } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
-import { Entypo } from "@expo/vector-icons";
-import { useEffect, useRef, useState } from "react";
-import itemProduct from "../../../components/itemProduct";
+import { Alert, BackHandler, FlatList, Modal, Platform, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Entypo, Ionicons } from "@expo/vector-icons";
+import { useEffect, useState } from "react";
 import ItemProduct from "../../../components/itemProduct";
-import { Redirect, router } from "expo-router";
 import Limit from "../../../components/limit";
 import ProgressLimit from "../../../components/progressLimit";
-import api from "../../../api/api";
-import { URL } from "../../../api/const";
-import axios from "axios";
+// import api from "../../../api/api";
+// import { Token, URL } from "../../../api/const";
+// import axios from "axios";
 import Loading from "../../../components/Loading";
+import { useDispatch, useSelector } from "react-redux";
+import { getLimitData } from "../../../store/Slicers/Products";
 
 const home = () => {
-    const [appData, setAppData] = useState([]);
-    const [isloading, setLoading] = useState(false);
-    const getAppData = async () => {
-        setLoading(true);
-        try {
-            const res = await axios(`${URL}/application/last`, {
-                method: "get",
-                headers: {
-                    Authorization: `Bearer 6963|oner5KAxvAcP1UPXiERM3QbpgtaR8bkaWMVvQ5EJed5dffc1`
+    const platform = Platform.OS;
+    const dispatch = useDispatch()
+    const [isModal, setModal] = useState(false);
+    const [chooseCard, setChooseCard] = useState(null);
+    const { limitData, isLoading } = useSelector(state => state.ProductSlicer)
+    useEffect(() => {
+        dispatch(getLimitData())
+    }, [])
+
+    const hanldeChooseCard = (prop) => {
+        Alert.alert('Have you selected this card', 'Are you sure', [
+            {
+                text: 'Cancel',
+                style: 'cancel',
+            },
+            {
+                text: 'OK', onPress: () => {
+                    const findItem = limitData?.limit_list?.data.find(c => c.guidFinProduct === prop)
+                    setChooseCard(findItem)
+                    setModal(false)
                 }
-            })
-            if (res.status === 200) {
-                setAppData(res.data)
-            }
-        } catch (error) {
-            console.log(error);
-        }
-        finally {
-            setLoading(false);
-        }
+            },
+        ]);
     }
 
     useEffect(() => {
-        getAppData()
-    }, [])
+        const backAction = () => {
+            if (isModal) {
+                setModal(false);
+                return true;
+            }
+            return false;
+        };
+        const backHandler = BackHandler.addEventListener(
+            'hardwareBackPress',
+            backAction
+        );
+        return () => backHandler.remove();
+    }, [isModal]);
+
+    if (isLoading) {
+        return <Loading loading={isLoading} />
+    }
 
     return (
         <SafeAreaView className={'h-full pt-3 items-center bg-bg-default'}>
-            <Loading loading={isloading} />
-            <View className={'p;/?t-5 w-full justify-center items-center overflow-visible h-22'}>
-                <Limit limit={10000000} />
-                <ProgressLimit used={7020000} limit={10000000} page={'home'} />
-            </View>
-            <View className={'py-2 flex-1 justify-start items-start w-11/12  '}>
-                <View className={' '}>
-                    <Text className={'text-black text-17'}>Limit list</Text>
+            <Modal
+                animationType="slide"
+                visible={isModal}
+                onRequestClose={() => setModal(false)}
+            >
+                <Pressable onPress={() => setModal(false)} style={styles.closeBox} >
+                    <Ionicons name="close" style={styles.closebtn} />
+                </Pressable>
+                <View>
+                    <Text className={'text-xl font-bold px-5 pb-3 text-center text-black'}>Доступное ограничение выбирать</Text>
+                    <ScrollView>
+                        {
+                            limitData.limit_list?.data.map((item, index) => (
+                                <Pressable className={'w-full'} key={index.toString()}
+                                    onPress={() => hanldeChooseCard(item?.guidFinProduct)}
+                                >
+                                    <View className={'w-full mb-5 justify-center items-center overflow-visible h-22'}>
+                                        <Limit limit={item.limit} title={item.month_text} index={index} />
+                                    </View>
+                                </Pressable>
+                            ))
+                        }
+                    </ScrollView>
                 </View>
-                {appData.limit_list?.data.length === 0 &&
-                    <View className={'pt-2  mr-3 '}>
-                        <Text className={'text-gray text-15 text-center'}>Сканируйте QR код, чтобы добавить товар в список</Text>
+            </Modal>
+            <Pressable onPress={() => setModal(true)} className={'w-full'}>
+                {
+                    chooseCard ?
+                        <View className={'w-full justify-center items-center overflow-visible h-22'}>
+                            <Limit limit={chooseCard?.limit} title={chooseCard?.month_text} />
+                            <ProgressLimit used={15489} limit={chooseCard?.limit} page={'home'} />
+                        </View>
+                        :
+                        <View className={'w-11/12 rounded-2xl m-auto justify-center items-center overflow-hidden h-20 bg-slate-500'}>
+                            <View className={`absolute   w-40 h-40 rounded-full left-1 -top-4 -mt-16 -ml-24 bg-slate-400 `} >
+                            </View>
+                            <View className='flex flex-row items-center justify-center' >
+                                <Ionicons name="add" size={25} color={'white'} />
+                                <Text className='text-white text-19 ' >
+                                    choose a card first
+                                </Text>
+                            </View>
+                        </View>
+                }
+            </Pressable>
+            <View className={' justify-start items-start w-11/12 flex-1 py-2 '}>
+                <View className={' flex flex-row'}>
+                    <View>
+                        <Text className={'text-black text-17 font-bold'}> Products </Text>
+                    </View>
+                    <View className={'mt-1 -ml-2 flex flex-row'}>
+                        <Entypo name={'dot-single'} size={16} color={'gray'} />
+                        <Text className={'text-gray -mt-0.5 -ml-1  text-13'}>{limitData.products?.length} goods</Text>
+                    </View>
+                </View>
+                {limitData.products?.length == 0 &&
+                    <View className={'  mr-3 '}>
+                        <Text className={'text-gray text-15 text-center'}>Scan the QR code to add the product to the list</Text>
                     </View>
                 }
-                <ScrollView>
-                    {appData.limit_list?.data.length > 0 &&
-                        <View className={' w-full h-full'}>
+                {limitData.products?.length > 0 &&
+                    <ScrollView>
+                        <View className={platform === 'ios' ? ' w-full' : 'w-full h-full'}>
                             <FlatList
-                                data={appData.limit_list?.data} renderItem={
-                                    ({ item, index }) => (<ItemProduct product={{ item, id: appData.id }} page={'home'} />)
-                                } keyExtractor={(_, index) => index.toString()}
+                                data={limitData?.products} renderItem={
+                                    ({ item }) => (<ItemProduct prop={item} page={'home'} />)
+                                } keyExtractor={(_, index) => index}
                                 scrollEnabled={false}
                             />
                         </View>
-                    }
-                </ScrollView>
+                    </ScrollView>
+                }
             </View>
-
         </SafeAreaView>
     )
 }
 export default home;
+
+const styles = StyleSheet.create({
+    modalHeaderText: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 10,
+        marginTop: 10,
+        textAlign: 'center'
+    },
+    closebtn: {
+        fontSize: 30,
+        color: 'gray'
+    },
+    closeBox: {
+        display: "flex",
+        alignItems: "flex-end",
+        paddingRight: 5,
+        paddingTop: 5
+    }
+})

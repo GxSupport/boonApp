@@ -39,7 +39,7 @@ const Login = () => {
                 method: 'post',
                 data: { ...user, phone: cleanPhoneNumber(user.phone) },
             })
-            console.log(res);
+            console.log('login', res);
         } catch (error) {
             console.log(error);
         }

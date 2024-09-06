@@ -15,7 +15,6 @@ export default function Index() {
             setProgress((oldProgress) => {
                 if (oldProgress === 100) {
                     clearInterval(interval);
-
                     return 100;
                 }
                 return Math.min(oldProgress + 10, 100);

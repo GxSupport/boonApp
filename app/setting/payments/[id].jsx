@@ -1,7 +1,12 @@
-import { router } from "expo-router";
-import { View, Text, ScrollView, Image, ImageBackground } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { router, useNavigation } from "expo-router";
+import { useEffect } from "react";
+import { View, Text, ScrollView, Image, ImageBackground, Pressable } from "react-native";
+import { useSelector } from "react-redux";
 
 const Payments = () => {
+    const navigation = useNavigation()
+    const { card } = useSelector(state => state.CardSlicer)
     const bg_backg = require("../../../assets/cards/card_background.png")
     const cardImg = [
         {
@@ -21,64 +26,47 @@ const Payments = () => {
             img: require('../../../assets/cards/JCB.jpg')
         },
     ]
-    const mainCard =
-        { cardNumber: '1234 5678 9012 3456', cardType: 'Uzcard', validThru: '08/25', bgImg: '', card_owner: 'Card Owner' }
-    const extraCards = [
-        { id: 1, cardNumber: '1111 2222 3333 4444', cardType: 'Humo', validThru: '07/23', bgImg: '', card_owner: 'Card Owner' },
-        { id: 2, cardNumber: '5555 6666 7777 8888', cardType: 'MasterCard', validThru: '11/21', bgImg: '', card_owner: 'Card Owner' },
-        { id: 3, cardNumber: '9999 0000 1111 2222', cardType: 'American Express', validThru: '09/27', bgImg: '', card_owner: 'Card Owner' }
-    ]
 
-    const getIdEdit = (ID) => {
-        alert(ID)
-    }
+    useEffect(() => {
+        navigation.setOptions({
+            headerRight: () => (
+                <Pressable
+                    onPress={() => router.push(`/setting/addCard/add`)}
+                >
+                    <Ionicons onPress={() => router.push(`/setting/addCard/add`)} name={`${card ? 'create-outline' : 'add-sharp'}`} size={24} color="#0080ff" />
+                </Pressable>
+            )
+        })
+    }, [navigation, card])
+
 
     return (
         <ScrollView className={'bg-bg-default h-full'}>
             <View className='px-5 ' >
                 <View>
-                    <Text className='font-normal text-lg mb-3'>Основная карта</Text>
-                    <ImageBackground source={bg_backg} resizeMode="cover" className='mb-3 p-5 py-8 rounded-xl overflow-hidden' >
-                        <View>
-                            <Text className='text-[#EBEBEB] font-semibold'>{mainCard.cardType}</Text>
-                            <Text className='text-[#EBEBEB] my-1 text-15 font-bold' >{mainCard.cardNumber}</Text>
-                            <Text className='text-[#EBEBEB] font-semibold' >{mainCard.card_owner}</Text>
-                            <View className='flex flex-row  justify-between items-end mt-5' >
-                                <Text className='text-[#EBEBEB]  font-semibold'>{mainCard.validThru}</Text>
-                                <View className='w-11 h-11'>
-                                    {
-                                        cardImg.map(({ title, img }, index) => (
-                                            mainCard.cardType === title &&
-                                            <Image key={index} source={img} className='w-full h-full ' />
-                                        ))
-                                    }
-                                </View>
-                            </View>
-                        </View>
-                    </ImageBackground>
-                </View>
-                <View>
-                    <Text className='font-normal text-lg mb-3'>Дополнительные карты</Text>
-                    {extraCards.map((card, index) => (
-                        <ImageBackground key={index} source={bg_backg} resizeMode="cover" className='mb-3 p-5 py-8 rounded-xl overflow-hidden' onTouchEnd={() => router.push(`/setting/editCard/${card.id}`)}>
+                    <Text className='font-normal text-lg mb-3'>Информация о вашей карте</Text>
+                    <Pressable
+                        onPress={() => router.push(`/setting/addCard/add`)}
+                    >
+                        <ImageBackground source={bg_backg} resizeMode="cover" className='mb-3 p-5 py-8 rounded-xl overflow-hidden'>
                             <View>
                                 <Text className='text-[#EBEBEB] font-semibold'>{card.cardType}</Text>
-                                <Text className='text-[#EBEBEB] my-1 text-15 font-bold' >{card.cardNumber}</Text>
-                                <Text className='text-[#EBEBEB] font-semibold' >{card.card_owner}</Text>
-                                <View className='flex flex-row  justify-between items-end mt-5' >
+                                <Text className='text-[#EBEBEB] my-1 text-15 font-bold'>{card.cardNumber}</Text>
+                                <Text className='text-[#EBEBEB] my-1 text-xl font-bold'>{card.owner}</Text>
+                                <View className='flex flex-row  justify-between items-end mt-5'>
                                     <Text className='text-[#EBEBEB]  font-semibold'>{card.validThru}</Text>
                                     <View className='w-11 h-11'>
                                         {
                                             cardImg.map(({ title, img }, index) => (
                                                 card.cardType === title &&
-                                                <Image key={index} source={img} className='w-full h-full ' />
+                                                <Image key={index} source={img} className='w-full h-full' resizeMode="contain" />
                                             ))
                                         }
                                     </View>
                                 </View>
                             </View>
                         </ImageBackground>
-                    ))}
+                    </Pressable>
                 </View>
             </View>
         </ScrollView>
