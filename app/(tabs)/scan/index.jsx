@@ -4,6 +4,8 @@ import React, { useCallback, useEffect, useRef } from "react";
 import { requestCameraPermissionsAsync } from "expo-camera/legacy";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect } from "@react-navigation/native";
+import axios from "axios";
+import { Token, URL } from "../../../api/const";
 
 export default function Scan() {
     const [hasPermission, setHasPermission] = useCameraPermissions();
@@ -11,14 +13,27 @@ export default function Scan() {
     const appState = useRef(AppState.currentState)
     const successCode = async (barcode) => {
         qrLock.current = false
-        console.log('barcode', JSON.stringify(barcode, null, 2));
+        // console.log('barcode', JSON.stringify(barcode, null, 2));
+        try {
+            const result = await axios(`${URL}/application/product_parse`, {
+                data: {
+                    product_url: barcode?.data,
+                    task_id: 1,
+                },
+                headers: {
+                    'Authorization': `Bearer ${Token}`,
+                }
+            })
+            console.log('parsed product', JSON.stringify(result.data, null, 2));
+        } catch (error) {
+            console.log(error);
+        }
     }
     useEffect(() => {
-
-        // (async () => {
-        //     const { status } = await Camera.requestCameraPermissionsAsync();
-        //     setHasPermission(status === 'granted');
-        // })();
+        (async () => {
+            const { status } = await Camera.requestCameraPermissionsAsync();
+            setHasPermission(status === 'granted');
+        })();
         const subscription = AppState.addEventListener("change", (nextAppState) => {
             if (
                 appState.current.match(/inactive|background/) &&
@@ -48,7 +63,7 @@ export default function Scan() {
             }, []))
         return (
             <View style={styles.container} >
-                <Text style={styles.cameraText} >Для сканирования QR кода необходимо разрешение на использование камеры</Text>
+                <Text style={styles.cameraText}>Для сканирования QR кода необходимо разрешение на использование камеры</Text>
                 <Button title={'Разрешить'} onPress={requestCameraPermissionsAsync} />
             </View>
         )
@@ -57,14 +72,14 @@ export default function Scan() {
         <SafeAreaView>
             <CameraView
                 facing="back"
-                onBarcodeScanned={({ data }) => {
-                    if (data && !qrLock.current) {
+                onBarcodeScanned={(barcode) => {
+                    if (barcode && !qrLock.current) {
                         qrLock.current = true;
                         setTimeout(async () => {
                             qrLock.current = false;
-                            await Linking.openURL(data);
-                            successCode(data)
-                        }, 1000);
+                            await Linking.openURL(barcode.data);
+                            successCode(barcode)
+                        }, 500);
                     }
                 }}
                 className={'w-full, h-full'}

@@ -114,7 +114,7 @@ const home = () => {
                     </View>
                 </View>
                 {limitData.products?.length == 0 &&
-                    <View className={'  mr-3 '}>
+                    <View className={'mr-3 '}>
                         <Text className={'text-gray text-15 text-center'}>Scan the QR code to add the product to the list</Text>
                     </View>
                 }
