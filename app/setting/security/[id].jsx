@@ -14,8 +14,6 @@ const Security = () => {
             behavior={Platform.OS === "ios" ? "padding" : "height"}
             className={'flex-1 bg-bg-default'}
         >
-
-
             <View className={'flex justify-start items-center  bg-bg-default h-full '}>
 
                 <View className={'mt-5  justify-center items-center w-full '}>

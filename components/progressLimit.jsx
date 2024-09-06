@@ -1,6 +1,6 @@
-import {Text, View} from "react-native";
-import {formatSum} from "../utils/formatSum";
-import {useEffect, useState} from "react";
+import { Text, View } from "react-native";
+import { formatSum } from "../utils/formatSum";
+import { useEffect, useState } from "react";
 
 const ProgressLimit = ({ used, limit, page }) => {
     const [finish, setFinish] = useState(false);
@@ -11,28 +11,21 @@ const ProgressLimit = ({ used, limit, page }) => {
     useEffect(() => {
         const resi = limit - used;
         setResidual(resi);
-        setResidualProgress(Math.floor(Math.floor((resi / limit) * 100)/10));
-
-
-        setUsedProgress(Math.floor(Math.floor((used / limit) * 100)/10));
-
+        setResidualProgress(Math.floor(Math.floor((resi / limit) * 100) / 10));
+        setUsedProgress(Math.floor(Math.floor((used / limit) * 100) / 10));
         setFinish(true);
     }, [finish, used, limit]);
 
     return (
-        <View className={page==='home' ? 'w-11/12 rounded-b-2xl  bg-white -mt-3 h-28 z-0':'w-11/12 rounded-2xl  bg-white h-28 z-0'}>
-
-                <View className={page==='home' ? 'pt-10  flex justify-center items-center':' pt-4 flex justify-center items-center'}>
-                    <View className={'flex-row w-10/12 '}>
-                        <View className={`bg-blue-400  rounded-2xl h-2 w-10/12`}  >
-                        </View>
-                        <View className={`bg-gray-200   rounded-2xl h-2 w-1/12`}  >
-                        </View>
+        <View className={page === 'home' ? 'w-11/12 rounded-b-2xl  bg-white -mt-3 h-28 z-0' : 'w-11/12 rounded-2xl  bg-white h-24 z-0'}>
+            <View className={page === 'home' ? 'pt-10  flex justify-center items-center' : ' pt-4 flex justify-center items-center'}>
+                <View className={'flex-row w-10/12 '}>
+                    <View className={`bg-blue-400  rounded-2xl h-2 w-10/12`}  >
                     </View>
-
+                    <View className={`bg-gray-200   rounded-2xl h-2 w-1/12`}  >
+                    </View>
                 </View>
-
-
+            </View>
             <View className={'pt-1  items-center'}>
                 <View className={' w-10/12 '}>
                     <View className={'flex flex-row'}>

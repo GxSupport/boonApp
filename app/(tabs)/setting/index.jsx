@@ -91,7 +91,7 @@ const SettingPage = () => {
                                 <Ionicons name="exit" size={20} color="#FF5865" />
                             </View>
                             <View className={'justify-center items-center ml-2'}>
-                                <Text className={'text-17 text-logout'}>Выйти из аккаунта</Text>
+                                <Text className={'text-17 text-logout'} onPress={() => router.push('/login')} >Выйти из аккаунта</Text>
                             </View>
                         </View>
                     </View>
