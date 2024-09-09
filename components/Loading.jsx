@@ -11,7 +11,7 @@ const Loading = ({ loading }) => {
       >
         <View style={styles.modalBackground}>
           <View style={styles.activityIndicatorWrapper}>
-            <ActivityIndicator size="large" color="#0000ff" />
+            <ActivityIndicator size="50" color="#00BFFF" />
           </View>
         </View>
       </Modal>
@@ -26,21 +26,20 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    position:"absolute"
+    position: "absolute"
   },
   modalBackground: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   activityIndicatorWrapper: {
-    backgroundColor: '#FFFFFF',
-    height: 100,
-    width: 100,
-    borderRadius: 10,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    width: '100%',
+    flex: 1,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    filter: `blur(10px)`,
   },
 });

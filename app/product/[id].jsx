@@ -1,12 +1,10 @@
-import { FlatList, Image, ScrollView, ScrollViewComponent, SectionList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import InfoProduct from "../../components/infoProduct";
-import { router } from "expo-router";
+import { Image, ScrollView, SectionList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import { useEffect, useState } from "react";
-import axios from "axios";
-import { Token, URL } from "../../api/const";
+import { URL } from "../../api/const";
 import Loading from "../../components/Loading";
 import { SafeAreaView } from "react-native-safe-area-context";
+import api from "../../api/api";
 const id = () => {
 	const [isLoading, setLoading] = useState(false)
 
@@ -17,11 +15,7 @@ const id = () => {
 		setLoading(true)
 		if (params.id) {
 			try {
-				const res = await axios(`${URL}/application/product_info/${params?.id}`, {
-					headers: {
-						'Authorization': `Bearer ${Token}`,
-					}
-				});
+				const res = await api(`application/product_info/${params?.id}`);
 				// console.log('single prod`uct', JSON.stringify(res.data, null, 2));
 				setSingleInfo(res.data)
 			} catch (error) {
@@ -39,33 +33,41 @@ const id = () => {
 	if (isLoading) {
 		return <Loading loading={isLoading} />
 	}
+	let sections = singleInfo?.info.map(section => ({
+		title: section.name,
+		data: section.characters,
+	}));
 	return (
 		<SafeAreaView style={styles.container}>
 			{singleInfo ? (
 				<View style={styles.wrapper}>
-					<ScrollView contentContainerStyle={styles.scrollViewContent}>
-						<Text style={styles.headerText}>
-							{singleInfo?.name}
-						</Text>
-						<Image
-							source={{ uri: singleInfo?.image }}
-							style={styles.image}
-							onError={(error) => console.error('Rasm yuklanmadi', error)}
-						/>
-						{singleInfo?.info.map((section, sectionIndex) => (
-							<View key={sectionIndex} style={styles.section}>
-								<Text style={styles.sectionTitle}>
-									{section.name}
-								</Text>
-								{section.characters.map((char, charIndex) => (
-									<View key={charIndex} style={styles.character}>
-										<Text style={styles.characterName}>{char.name}: </Text>
-										<Text style={styles.characterValue}>{char.value}</Text>
-									</View>
-								))}
+					<Text style={styles.headerText}>
+						{singleInfo?.name}
+					</Text>
+					<Image
+						source={{ uri: singleInfo?.image }}
+						style={{ margin: "auto" }}
+						onError={(error) => console.error('Rasm yuklanmadi', error)}
+						width={350}
+						height={150}
+						resizeMode='contain'
+					/>
+					<SectionList
+						sections={sections}
+						keyExtractor={(item, index) => item + index}
+						renderItem={({ item }) => (
+							<View style={styles.character}>
+								<Text style={styles.characterName}
+								>{item.name}: </Text>
+								<Text style={styles.characterValue}>{item.value}</Text>
 							</View>
-						))}
-					</ScrollView>
+						)}
+						renderSectionHeader={({ section: { title } }) => (
+							<Text style={styles.sectionTitle}>{title}</Text>
+						)}
+						stickySectionHeadersEnabled={true}
+						contentContainerStyle={styles.scrollViewContent}
+					/>
 					<TouchableOpacity style={styles.button}>
 						<Text style={styles.buttonText}>Добавить в корзину</Text>
 					</TouchableOpacity>
@@ -96,6 +98,7 @@ const styles = StyleSheet.create({
 	},
 	headerText: {
 		fontSize: 19,
+		textAlign: 'center',
 	},
 	image: {
 		width: '100%',
@@ -110,11 +113,12 @@ const styles = StyleSheet.create({
 		fontWeight: 'bold',
 		color: 'black',
 		marginBottom: 5,
+		backgroundColor: "white"
 	},
 	character: {
 		flexDirection: 'row',
 		paddingVertical: 3,
-		flexWrap:"wrap"
+		flexWrap: "wrap",
 	},
 	characterName: {
 		fontSize: 13,

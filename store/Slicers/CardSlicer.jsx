@@ -1,16 +1,13 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { Token, URL } from "../../api/const";
+import api from "../../api/api";
 
 
 // export const getCardInfo = createAsyncThunk(
 //   'card-info',
 //   async () => {
-//     const res = await axios({
-//       url: `${URL}/getCardInfo`, headers: {
-//         Authorization: `Bearer ${Token}`
-//       }
-//     })
+//     const res = await api(`/getCardInfo`)
 //     const data = await res.data
 //     return data
 //   }

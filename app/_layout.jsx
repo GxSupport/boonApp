@@ -1,12 +1,11 @@
-import { router, Stack } from "expo-router";
+import { Stack } from "expo-router";
 import { View } from "react-native";
-import Ionicons from '@expo/vector-icons/Ionicons';
 import { Provider } from "react-redux";
 import { Store } from "../store/Store";
 const IndexStact = () => {
     return <Provider store={Store}>
         <Stack >
-            {/*<Stack.Screen name="login"  options={{headerShown:false}} />*/}
+            {/* <Stack.Screen name="login" options={{ headerShown: true }} /> */}
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen name="product/[id]" options={{
                 headerBackTitleVisible: false,

@@ -4,9 +4,6 @@ import { useEffect, useState } from "react";
 import ItemProduct from "../../../components/itemProduct";
 import Limit from "../../../components/limit";
 import ProgressLimit from "../../../components/progressLimit";
-// import api from "../../../api/api";
-// import { Token, URL } from "../../../api/const";
-// import axios from "axios";
 import Loading from "../../../components/Loading";
 import { useDispatch, useSelector } from "react-redux";
 import { getLimitData } from "../../../store/Slicers/Products";
@@ -91,19 +88,22 @@ const home = () => {
                             <ProgressLimit used={15489} limit={chooseCard?.limit} page={'home'} />
                         </View>
                         :
-                        <View className={'w-11/12 rounded-2xl m-auto justify-center items-center overflow-hidden h-20 bg-slate-500'}>
-                            <View className={`absolute   w-40 h-40 rounded-full left-1 -top-4 -mt-16 -ml-24 bg-slate-400 `} >
+                        <View className="w-full justify-center items-center overflow-visible h-22">
+                            <View className={'w-11/12 z-10 rounded-2xl m-auto justify-center items-center overflow-hidden h-20 bg-blue-500'}>
+                                <View className={`absolute   w-40 h-40 rounded-full left-1 -top-4 -mt-16 -ml-24 bg-blue-400 `} >
+                                </View>
+                                <View className='flex flex-row items-center justify-center' >
+                                    <Ionicons name="add" size={25} color={'white'} />
+                                    <Text className='text-white text-19'>
+                                        choose a card
+                                    </Text>
+                                </View>
                             </View>
-                            <View className='flex flex-row items-center justify-center' >
-                                <Ionicons name="add" size={25} color={'white'} />
-                                <Text className='text-white text-19 ' >
-                                    choose a card first
-                                </Text>
-                            </View>
+                            <ProgressLimit used={0} limit={0} page={'home'} />
                         </View>
                 }
             </Pressable>
-            <View className={' justify-start items-start w-11/12 flex-1 py-2 '}>
+            <View className={' justify-start items-start w-11/12 flex-1 py-2'}>
                 <View className={' flex flex-row'}>
                     <View>
                         <Text className={'text-black text-17 font-bold'}> Products </Text>
@@ -114,14 +114,15 @@ const home = () => {
                     </View>
                 </View>
                 {limitData.products?.length == 0 &&
-                    <View className={'mr-3 '}>
+                    <View className={'mr-3 mt-1'}>
                         <Text className={'text-gray text-15 text-center'}>Scan the QR code to add the product to the list</Text>
                     </View>
                 }
                 {limitData.products?.length > 0 &&
                     <ScrollView>
-                        <View className={platform === 'ios' ? ' w-full' : 'w-full h-full'}>
+                        <View className={platform === 'ios' ? 'w-full' : ' w-full h-full'}>
                             <FlatList
+                                className='mt-2'
                                 data={limitData?.products} renderItem={
                                     ({ item }) => (<ItemProduct prop={item} page={'home'} />)
                                 } keyExtractor={(_, index) => index}
