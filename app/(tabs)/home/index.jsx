@@ -52,7 +52,6 @@ const home = () => {
     if (isLoading) {
         return <Loading loading={isLoading} />
     }
-
     return (
         <SafeAreaView className={'h-full pt-3 items-center bg-bg-default'}>
             <Modal

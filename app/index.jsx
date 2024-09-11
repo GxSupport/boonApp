@@ -1,21 +1,21 @@
 import { View, StyleSheet, Text } from "react-native";
 import { useEffect, useState } from "react";
-import { Redirect, router, useNavigation } from "expo-router";
+import { router, useNavigation } from "expo-router";
 import * as Secure from 'expo-secure-store';
-import LottieView from 'lottie-react-native';
-import initialRender from '../assets/loadingFirst.json'
+import * as SplashScreen from 'expo-splash-screen';
+import { useFonts } from "expo-font";
 export default function Index() {
   const [progress, setProgress] = useState(0);
   const [token, setToken] = useState(null);
-  const navigation = useNavigation()
 
+  const navigations = useNavigation()
 
   useEffect(() => {
-    navigation.setOptions({
+    navigations.setOptions({
       title: "",
       headerShown: false,
-    });
-  }, [navigation])
+    })
+  }, [])
 
   useEffect(() => {
     Secure.setItem('access_token', 'test');
@@ -41,14 +41,27 @@ export default function Index() {
 
   }, [progress, token, router]);
 
+
+  const [loaded, error] = useFonts({
+    "syne": require('../assets/fonts/Syne-Bold.ttf'),
+  })
+
+  SplashScreen.preventAutoHideAsync();
+  useEffect(() => {
+    if (loaded || error) {
+      SplashScreen.hideAsync();
+    }
+  }, [loaded, error]);
+
+  if (!loaded && !error) {
+    return null;
+  }
+
   return (
     <View style={styles.container}>
-      <LottieView
-        source={initialRender}
-        autoPlay
-        loop
-        style={styles.animation}
-      />
+      <Text style={styles.boonText} >
+        Tehno {'\n'}BOON
+      </Text>
     </View>
   );
 }
@@ -58,9 +71,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: "#007FFF"
   },
-  animation: {
-    width: 200,
-    height: 200,
+  boonText: {
+    color: 'white',
+    fontSize: 50,
+    fontFamily: "syne",
+    lineHeight: 45,
   },
 });

@@ -69,7 +69,7 @@ function AddCard() {
   }
   return (
     <View className='flex flex-col items-stretch justify-between px-5 py-2 bg-bg-default h-full'>
-      <FlashMessage position="top" />
+      <FlashMessage position="top" duration={3000} />
       <ScrollView>
         <Text className='text-17 text-[#171717]'>
           Данные карты

@@ -11,11 +11,9 @@ export default () => {
 			tabBarStyle: {
 				backgroundColor: 'white',
 				height: platform === 'ios' ? 90 : 60,
-
 				borderTopWidth: 0,
 				borderTopColor: 'transparent',
 				shadowColor: "#000",
-
 				shadowOpacity: 0,
 				shadowRadius: 0,
 				elevation: 0,

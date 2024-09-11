@@ -5,7 +5,7 @@ import { Store } from "../store/Store";
 const IndexStact = () => {
     return <Provider store={Store}>
         <Stack >
-            {/* <Stack.Screen name="login" options={{ headerShown: true }} /> */}
+            {/* <Stack.Screen name="login" options={{ headerShown: false }} /> */}
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen name="product/[id]" options={{
                 headerBackTitleVisible: false,

@@ -1,20 +1,13 @@
-import { View, Text, TextInput, TouchableOpacity, ActivityIndicator } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { TextInputMask } from "react-native-masked-text";
 import { useState } from "react";
-import { loadingIcon } from "../assets/loading.svg";
-import {
-    BallIndicator,
-    BarIndicator,
-    DotIndicator,
-    MaterialIndicator,
-    PacmanIndicator,
-    PulseIndicator, SkypeIndicator
-} from "react-native-indicators";
+import { SkypeIndicator } from "react-native-indicators";
 import { Redirect, router } from "expo-router";
 import { cleanPhoneNumber } from "../utils/formatPhone";
 import axios from "axios";
 import { URL } from "../api/const";
+import FlashMessage, { showMessage } from "react-native-flash-message";
 
 
 const Login = () => {
@@ -27,7 +20,9 @@ const Login = () => {
             ...user,
             [name]: value
         });
+
     }
+
 
     const [loading, setLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(true);
@@ -40,8 +35,15 @@ const Login = () => {
                 data: { ...user, phone: cleanPhoneNumber(user.phone) },
             })
             console.log('login', res);
+            if (res.statusCode === 200) {
+                router.push('home');
+            }
         } catch (error) {
-            console.log(error);
+            console.log(error.message);
+            showMessage({
+                message: error.message,
+                type: "warning",
+            });
         }
         finally {
             setLoading(false);
@@ -52,13 +54,14 @@ const Login = () => {
     }
     return (
         <View className={'flex-1 justify-center w-full items-center bg-bg-default'}>
+            <FlashMessage position="top" duration={3000} style={{ top: 30 }} />
             <View className={'w-11/12'}>
                 <Text className={'text-2xl  text-black text-19'}>Добро пожаловать!</Text>
             </View>
             <View className={'w-11/12'}>
                 <Text className={'text-base text-gray text-17'}>Введите номер телефона и пароль, чтобы войти</Text>
             </View>
-            <View className={'w-11/12   '}>
+            <View className={'w-11/12'}>
                 <TextInputMask
                     value={user.phone}
                     onChangeText={(vlaue) => getInputValue('phone', vlaue)}
@@ -79,6 +82,7 @@ const Login = () => {
                     </View>
                 }
             </View>
+
             <View className={'w-11/12'}>
                 <TextInput
                     onChangeText={(vlaue) => getInputValue('password', vlaue)}
@@ -111,3 +115,10 @@ const Login = () => {
     )
 }
 export default Login;
+
+const styles = StyleSheet.create({
+    errorElem: {
+        borderColor: 'red',
+        color: "red"
+    }
+})

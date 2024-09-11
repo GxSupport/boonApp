@@ -1,13 +1,15 @@
-import { Image, ScrollView, SectionList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image, Pressable, ScrollView, SectionList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import { URL } from "../../api/const";
 import Loading from "../../components/Loading";
 import { SafeAreaView } from "react-native-safe-area-context";
 import api from "../../api/api";
+import createDashedLine from "../../utils/createDashedLine";
+import ImageView from "react-native-image-viewing";
 const id = () => {
 	const [isLoading, setLoading] = useState(false)
-
+	const [visible, setIsVisible] = useState(false);
 	const [singleInfo, setSingleInfo] = useState(null)
 	const { params } = useRoute();
 
@@ -16,7 +18,6 @@ const id = () => {
 		if (params.id) {
 			try {
 				const res = await api(`application/product_info/${params?.id}`);
-				// console.log('single prod`uct', JSON.stringify(res.data, null, 2));
 				setSingleInfo(res.data)
 			} catch (error) {
 				console.log(error);
@@ -37,6 +38,7 @@ const id = () => {
 		title: section.name,
 		data: section.characters,
 	}));
+
 	return (
 		<SafeAreaView style={styles.container}>
 			{singleInfo ? (
@@ -44,14 +46,24 @@ const id = () => {
 					<Text style={styles.headerText}>
 						{singleInfo?.name}
 					</Text>
-					<Image
-						source={{ uri: singleInfo?.image }}
-						style={{ margin: "auto" }}
-						onError={(error) => console.error('Rasm yuklanmadi', error)}
-						width={350}
-						height={150}
-						resizeMode='contain'
+					<ImageView
+						imageIndex={0}
+						visible={visible}
+						onRequestClose={() => setIsVisible(false)}
+						images={[{ uri: singleInfo?.image }]}
 					/>
+					{singleInfo?.image ?
+						<Pressable onPress={() => setIsVisible(true)} >
+							<Image
+								source={{ uri: singleInfo?.image }}
+								style={{ margin: "auto" }}
+								onError={(error) => console.error('Rasm yuklanmadi', error)}
+								width={300}
+								height={150}
+								resizeMode='contain'
+							/>
+						</Pressable>
+						: null}
 					<SectionList
 						sections={sections}
 						keyExtractor={(item, index) => item + index}
@@ -59,6 +71,9 @@ const id = () => {
 							<View style={styles.character}>
 								<Text style={styles.characterName}
 								>{item.name}: </Text>
+								<Text style={styles.characterName} >
+									{createDashedLine(item?.name, item.value, 45)}
+								</Text>
 								<Text style={styles.characterValue}>{item.value}</Text>
 							</View>
 						)}
@@ -98,12 +113,7 @@ const styles = StyleSheet.create({
 	},
 	headerText: {
 		fontSize: 19,
-		textAlign: 'center',
-	},
-	image: {
-		width: '100%',
-		height: 150,
-		resizeMode: 'contain',
+		paddingHorizontal: 20,
 	},
 	section: {
 		marginVertical: 10,
@@ -119,6 +129,7 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		paddingVertical: 3,
 		flexWrap: "wrap",
+		justifyContent: "space-between"
 	},
 	characterName: {
 		fontSize: 13,
