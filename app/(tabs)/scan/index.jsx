@@ -4,8 +4,7 @@ import React, { useCallback, useEffect, useRef } from "react";
 import { requestCameraPermissionsAsync } from "expo-camera/legacy";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect } from "@react-navigation/native";
-import axios from "axios";
-import { Token, URL } from "../../../api/const";
+import api from "../../../api/api";
 
 export default function Scan() {
     const [hasPermission, setHasPermission] = useCameraPermissions();
@@ -15,14 +14,12 @@ export default function Scan() {
         qrLock.current = false
         // console.log('barcode', JSON.stringify(barcode, null, 2));
         try {
-            const result = await axios(`${URL}/application/product_parse`, {
+            const result = await api(`/application/product_parse`, {
                 data: {
                     product_url: barcode?.data,
                     task_id: 1,
                 },
-                headers: {
-                    'Authorization': `Bearer ${Token}`,
-                }
+                method: "POST"
             })
             console.log('parsed product', JSON.stringify(result.data, null, 2));
         } catch (error) {

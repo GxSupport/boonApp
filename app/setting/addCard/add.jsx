@@ -9,6 +9,7 @@ import FlashMessage, { showMessage } from "react-native-flash-message";
 import { TextInputMask } from 'react-native-masked-text';
 import { TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import api from '../../../api/api';
 function AddCard() {
   const navigation = useNavigation();
   const [isLoading, setLoading] = useState(false)
@@ -46,12 +47,9 @@ function AddCard() {
   const submitCardinfo = async () => {
     setLoading(true);
     try {
-      const res = await axios(`${URL}/application/add_card`, {
+      const res = await api(`/application/add_card`, {
         method: 'POST',
-        data: inputValue,
-        headers: {
-          Authorization: `Bearer ${Token}`
-        }
+        data: inputValue
       })
       console.log(res);
       showMessage({

@@ -40,14 +40,14 @@ const ProgressLimit = ({ used, limit, page }) => {
                         <View className={'flex-1 h-5  w-6/12'}>
                             <View>
                                 <View className={'flex flex-row'}>
-                                    <Text className={'text-13 text-black font-bold'}>{formatSum(used)}</Text>
+                                    <Text className={'text-13 text-black font-bold'}>{formatSum(used) || '0'}</Text>
                                     <Text className={'ml-1 text-13 text-gray'}>UZS</Text>
                                 </View>
                             </View>
                         </View>
                         <View className={'flex-1 h-5  w-6/12 items-end'}>
                             <View className={'flex flex-row'}>
-                                <Text className={'text-13 text-black font-bold'}>{formatSum(residual)}</Text>
+                                <Text className={'text-13 text-black font-bold'}>{formatSum(residual) || '0'}</Text>
                                 <Text className={'ml-1 text-13 text-gray'}>UZS</Text>
                             </View>
                         </View>

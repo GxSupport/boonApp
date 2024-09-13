@@ -1,15 +1,13 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
-import { Token, URL } from "../../api/const";
-
+import api from "../../api/api";
 
 export const getLimitData = createAsyncThunk('getLimitData', async () => {
-  const res = await axios(`${URL}/application/last`, {
-    headers: {
-      Authorization: `Bearer ${Token}`
-    }
-  })
-  return res.data
+  try {
+    const res = await api(`/application/last`)
+    return res.data
+  } catch (error) {
+    return error
+  }
 })
 
 const ProductSlicer = createSlice({

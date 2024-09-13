@@ -19,8 +19,8 @@ const ItemProduct = ({ prop, page }) => {
         );
     }
     return (
-        <View className={'w-full py-2  rounded-2xl  mt-4 bg-white'}>
-            <View className={'flex flex-row'}>
+        <View className={'w-full p-2 py-3 last:hidden rounded-2xl mb-2 bg-white'}>
+            <View className={'flex flex-row '}>
                 <View className={'w-10/12 p-1'}>
                     <View className={' pl-2 '}>
                         <Text className={'text-15 text-black font-bold'}>{prop?.product_category_name}</Text>
