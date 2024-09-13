@@ -3,16 +3,18 @@ import formatPhone from "../../../utils/formatPhone";
 import { Entypo, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { router } from "expo-router";
+import { useTranslation } from "react-i18next";
 
 const SettingPage = () => {
+    const { t } = useTranslation()
     const account = {
         name: 'Idsmoder',
         phone: 998913452724,
         id: 1
     }
     return (
-        <ScrollView>
-            <View className={'flex justify-center items-center bg-bg-default'}>
+        <ScrollView className='h-full bg-bg-default'>
+            <View className={'flex justify-center items-center  h-full'}>
                 <View className={'mt-10 justify-center items-center '}>
                     <View>
                         <Image source={require('../../../assets/profile/user.jpg')} className={'w-28 h-28 rounded-full'} />
@@ -31,7 +33,7 @@ const SettingPage = () => {
                                 <FontAwesome name={'user'} size={24} color={'#007FFF'} />
                             </View>
                             <View className={'justify-center items-center ml-3'}>
-                                <Text className={'text-15 text-black'}>Настройки аккаунта</Text>
+                                <Text className={'text-15 text-black'}> {t('account_setting')} </Text>
                             </View>
                         </View>
                         <View className={'w-2/12'}>
@@ -46,7 +48,7 @@ const SettingPage = () => {
                                 <Ionicons name={'card'} size={24} color={'#007FFF'} />
                             </View>
                             <View className={'justify-center items-center ml-3'}>
-                                <Text className={'text-15 text-black'}>Способы оплаты</Text>
+                                <Text className={'text-15 text-black'}> {t('payment_methods')} </Text>
                             </View>
                         </View>
                         <View className={'w-2/12'}>
@@ -61,7 +63,7 @@ const SettingPage = () => {
                                 <MaterialCommunityIcons name={'security'} size={24} color={'#007FFF'} />
                             </View>
                             <View className={'justify-center items-center ml-3'}>
-                                <Text className={'text-15 text-black'}>Безопасность</Text>
+                                <Text className={'text-15 text-black'}> {t('security')} </Text>
                             </View>
                         </View>
                         <View className={'w-2/12'}>
@@ -76,7 +78,7 @@ const SettingPage = () => {
                                 <MaterialCommunityIcons name={'palette-swatch-variant'} size={24} color={'#007FFF'} />
                             </View>
                             <View className={'justify-center items-center ml-3'}>
-                                <Text className={'text-15 text-black'}>Оформление</Text>
+                                <Text className={'text-15 text-black'}> {t('system_setting')} </Text>
                             </View>
                         </View>
                         <View className={'w-2/12'}>
@@ -91,7 +93,7 @@ const SettingPage = () => {
                                 <Ionicons name="exit" size={20} color="#FF5865" />
                             </View>
                             <View className={'justify-center items-center ml-2'}>
-                                <Text className={'text-17 text-logout'} onPress={() => router.push('/login')} >Выйти из аккаунта</Text>
+                                <Text className={'text-17 text-logout'} onPress={() => router.push('/login')}> {t('logout')} </Text>
                             </View>
                         </View>
                     </View>

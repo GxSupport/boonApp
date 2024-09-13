@@ -1,18 +1,18 @@
-import { Image, Pressable, ScrollView, SectionList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image, Pressable, SectionList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import { useEffect, useState } from "react";
-import { URL } from "../../api/const";
 import Loading from "../../components/Loading";
 import { SafeAreaView } from "react-native-safe-area-context";
 import api from "../../api/api";
 import createDashedLine from "../../utils/createDashedLine";
 import ImageView from "react-native-image-viewing";
+import { useTranslation } from "react-i18next";
 const id = () => {
 	const [isLoading, setLoading] = useState(false)
 	const [visible, setIsVisible] = useState(false);
 	const [singleInfo, setSingleInfo] = useState(null)
 	const { params } = useRoute();
-
+	const { t } = useTranslation()
 	const getSingleProduct = async () => {
 		setLoading(true)
 		if (params.id) {
@@ -84,13 +84,13 @@ const id = () => {
 						contentContainerStyle={styles.scrollViewContent}
 					/>
 					<TouchableOpacity style={styles.button}>
-						<Text style={styles.buttonText}>Добавить в корзину</Text>
+						<Text style={styles.buttonText}> {t('add_cart')} </Text>
 					</TouchableOpacity>
 				</View>
 			) : (
 				<View style={styles.emptyState}>
 					<Text style={styles.emptyStateText}>
-						Malumot topilmadi
+						{t('no_data')}
 					</Text>
 				</View>
 			)}

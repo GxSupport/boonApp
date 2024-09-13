@@ -8,9 +8,11 @@ import { cleanPhoneNumber } from "../utils/formatPhone";
 import axios from "axios";
 import { URL } from "../api/const";
 import FlashMessage, { showMessage } from "react-native-flash-message";
+import { useTranslation } from "react-i18next";
 
 
 const Login = () => {
+    const { t } = useTranslation()
     const [user, setUser] = useState({
         phone: '',
         password: '',
@@ -56,10 +58,10 @@ const Login = () => {
         <View className={'flex-1 justify-center w-full items-center bg-bg-default'}>
             <FlashMessage position="top" duration={3000} style={{ top: 30 }} />
             <View className={'w-11/12'}>
-                <Text className={'text-2xl  text-black text-19'}>Добро пожаловать!</Text>
+                <Text className={'text-2xl  text-black text-19'}>{t('welcome')} </Text>
             </View>
             <View className={'w-11/12'}>
-                <Text className={'text-base text-gray text-17'}>Введите номер телефона и пароль, чтобы войти</Text>
+                <Text className={'text-base text-gray text-17'}>{t('enter_text')} </Text>
             </View>
             <View className={'w-11/12'}>
                 <TextInputMask
@@ -87,7 +89,7 @@ const Login = () => {
                 <TextInput
                     onChangeText={(vlaue) => getInputValue('password', vlaue)}
                     className={'border border-border-1 bg-white rounded-md text-gray text-15  h-11 mt-5 pl-5 pr-12'}
-                    placeholder={'Пароль'}
+                    placeholder={t('password')}
                     secureTextEntry={showPassword}
                 />
                 <View className={'absolute right-5 top-2/4'}>
@@ -97,7 +99,7 @@ const Login = () => {
                 </View>
             </View>
             <View className={'w-11/12'}>
-                <Text className={'text-blue-500 text-15 mt-2'}>Забыли пароль?</Text>
+                <Text className={'text-blue-500 text-15 mt-2'}> {t('forget_password')} </Text>
             </View>
             <View className={'w-11/12 absolute bottom-4'}>
                 {loading &&
@@ -107,7 +109,7 @@ const Login = () => {
                 }
                 {!loading &&
                     <TouchableOpacity disabled={loading} className={'bg-btn-primary h-12 mt-5 rounded-md items-center justify-center'} onPress={login}>
-                        <Text className={'text-white text-15 '}>Войти</Text>
+                        <Text className={'text-white text-15 '}> {t('login')} </Text>
                     </TouchableOpacity>
                 }
             </View>

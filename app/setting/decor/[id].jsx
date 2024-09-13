@@ -1,24 +1,33 @@
 import { Image, Pressable, Text, View } from "react-native";
-import { Entypo, Ionicons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
-import { AsyncStorage } from 'react-native';
-import { getItem, setItem } from "expo-secure-store";
-import { clear } from "../../../utils/AsyncStorage";
+import { getItem, setItem } from "../../../utils/AsyncStorage";
+import { useTranslation } from "react-i18next";
+import i18n from "../../../utils/i18n";
+import { useDispatch, useSelector } from "react-redux";
+import { getTheme, toggleTheme } from "../../../store/Slicers/ThemeSlicer";
 const Decor = () => {
+	const { theme } = useSelector(state => state.ThemeSlicer);
+	const dispatch = useDispatch()
 	const [currentLang, setCurrentLang] = useState('uz')
-	const langRefresh = () => {
-		setCurrentLang(getItem('lang') || 'uz')
-	}
+	const { t } = useTranslation();
+
 	useEffect(() => {
-		langRefresh()
+		const loadLang = async () => {
+			const storedLang = await getItem('lang');
+			if (storedLang) {
+				setCurrentLang(storedLang);
+				i18n.changeLanguage(storedLang);
+			}
+		};
+		dispatch(getTheme());
+		loadLang();
 	}, [])
 	const icons = [
 		require('../../../assets/icons/1.png'),
 		require('../../../assets/icons/2.png'),
 		require('../../../assets/icons/3.png'),
 		require('../../../assets/icons/4.png'),
-		require('../../../assets/icons/dark.png'),
-		require('../../../assets/icons/white.png'),
 	]
 	const langData = [
 		{
@@ -34,22 +43,33 @@ const Decor = () => {
 			icon: require('../../../assets/icons/uz.png'),
 		},
 	]
+	const themeData = [
+		{
+			id: 1,
+			name: 'dark',
+			bg: require('../../../assets/icons/dark.png'),
+		},
+		{
+			id: 2,
+			name: 'light',
+			bg: require('../../../assets/icons/white.png'),
+		},
+	]
 
 	const changeLangue = async (lang) => {
-		setItem('lang', lang)
-		langRefresh()
-		console.log(currentLang);
+		await setItem('lang', lang)
+		setCurrentLang(lang)
+		i18n.changeLanguage(lang)
 	}
 
-
 	return (
-		<View className={'flex justify-start h-full items-center bg-bg-default'}>
-			<View className={'mt-10 w-11/12 '}>
+		<View className={`flex justify-start h-full items-center bg-bg-default `} >
+			<View className={'mt-7 w-11/12 '}>
 				<View>
-					<Text className={'text-17'}>Тема приложения</Text>
+					<Text className={'text-19'}>{t('theme_apk')}</Text>
 				</View>
 				<View className={'w-full my-4'}>
-					<Text className={'text-13'}>Иконка приложения</Text>
+					<Text className={'text-13'}>{t('icon_apk')}</Text>
 				</View>
 				<View className={'flex flex-row'}>
 					<View className={'rounded-lg'}>
@@ -66,30 +86,35 @@ const Decor = () => {
 					</View>
 				</View>
 				<View className={'w-full my-4'}>
-					<Text className={'text-13'}>Цветовая схема</Text>
+					<Text className={'text-13'}> {t('color_scheme')} </Text>
 				</View>
-				<View className={'flex flex-row'}>
-					<View className={'justify-center items-center'}>
-						<Image source={icons[4]} className={'w-16 h-28'} />
-						<View className={'mt-2 items-center'}>
-							<Text className={'text-13'}>Темная</Text>
-							<View className={'mt-2'}>
-								<Entypo name={'circle'} size={20} color={'gray'} />
-							</View>
-						</View>
-					</View>
-					<View className={'ml-4 rounded-lg justify-center items-center'}>
-						<Image source={icons[5]} className={'w-16 h-28'} />
-						<View className={'mt-2 items-center'}>
-							<Text className={'text-13'}>Светлая</Text>
-							<View className={'mt-2'}>
-								<Entypo name={'circle'} size={20} color={'gray'} />
-							</View>
-						</View>
-					</View>
+				<View className={'flex flex-row gap-4'}>
+					{
+						themeData.map((item) => {
+							return (
+								<Pressable className={'justify-center items-center'}
+									key={item.id}
+									onPress={() => {
+										dispatch(toggleTheme(item.name))
+									}}
+								>
+									<View className={`border  rounded-md overflow-hidden ${item.name === theme ? 'border-blue-400' : 'border-transparent'} `} >
+										<Image source={item.bg} className={'w-16 h-28'} />
+									</View>
+									<View className={'mt-2 items-center'}>
+										<Text className={'text-13'}> {t(item.name)} </Text>
+										<View className={'mt-1'}>
+											<Ionicons size={22} name={item.name === theme ? "radio-button-on" : "radio-button-off"} color={item.name === theme ? "#007FFF" : "gray"} />
+										</View>
+									</View>
+								</Pressable>
+							)
+						})
+					}
+
 				</View>
 				<View className={'w-full my-4'}>
-					<Text className={'text-13'}>Языковая схема</Text>
+					<Text className={'text-13'}> {t('lang_scheme')} </Text>
 				</View>
 				<View className='felx flex-col gap-2'>
 					{
@@ -106,7 +131,7 @@ const Decor = () => {
 									</View>
 								</View>
 								<View>
-									<Ionicons size={22} name={item.lang === currentLang ? "radio-button-on" : "radio-button-off"} color={item.lang === currentLang ? "blue" : "gray"} />
+									<Ionicons size={22} name={item.lang === currentLang ? "radio-button-on" : "radio-button-off"} color={item.lang === currentLang ? "#007FFF" : "gray"} />
 								</View>
 							</Pressable>
 						))
@@ -114,7 +139,7 @@ const Decor = () => {
 				</View>
 			</View>
 			<View className={'h-12 rounded-lg bg-btn-primary justify-center absolute bottom-5  w-11/12'}>
-				<Text className={'text-center text-white'}>Изменить оформление</Text>
+				<Text className={'text-center text-white'}> {t('change_design')} </Text>
 			</View>
 		</View>
 	)

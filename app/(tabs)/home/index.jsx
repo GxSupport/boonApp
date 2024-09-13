@@ -7,10 +7,13 @@ import ProgressLimit from "../../../components/progressLimit";
 import Loading from "../../../components/Loading";
 import { useDispatch, useSelector } from "react-redux";
 import { getLimitData } from "../../../store/Slicers/Products";
+import { useTranslation } from "react-i18next";
 
 const home = () => {
     const platform = Platform.OS;
     const dispatch = useDispatch()
+    const { t } = useTranslation()
+
     const [isModal, setModal] = useState(false);
     const [chooseCard, setChooseCard] = useState(null);
     const { limitData, isLoading } = useSelector(state => state.ProductSlicer)
@@ -19,9 +22,9 @@ const home = () => {
     }, [])
 
     const hanldeChooseCard = (prop) => {
-        Alert.alert('Have you selected this card', 'Are you sure', [
+        Alert.alert(t('alertHeading'), t('alertQuestion'), [
             {
-                text: 'Cancel',
+                text: t('cancel'),
                 style: 'cancel',
             },
             {
@@ -63,7 +66,7 @@ const home = () => {
                     <Ionicons name="close" style={styles.closebtn} />
                 </Pressable>
                 <View>
-                    <Text className={'text-xl font-bold px-5 pb-3 text-center text-black'}>Доступное ограничение выбирать</Text>
+                    <Text className={'text-xl font-bold px-5 pb-3 text-center text-black'}> {t('limit_select')}  </Text>
                     <ScrollView>
                         {
                             limitData.limit_list?.data.map((item, index) => (
@@ -89,12 +92,12 @@ const home = () => {
                         :
                         <View className="w-full justify-center items-center overflow-visible h-22">
                             <View className={'w-11/12 z-10 rounded-2xl m-auto justify-center items-center overflow-hidden h-20 bg-blue-500'}>
-                                <View className={`absolute   w-40 h-40 rounded-full left-1 -top-4 -mt-16 -ml-24 bg-blue-400 `} >
+                                <View className={`absolute w-40 h-40 rounded-full left-1 -top-4 -mt-16 -ml-24 bg-blue-400 `} >
                                 </View>
                                 <View className='flex flex-row items-center justify-center' >
-                                    <Ionicons name="add" size={25} color={'white'} />
-                                    <Text className='text-white text-19'>
-                                        choose a card
+                                    <Ionicons name="information-outline" size={25} color={'white'} />
+                                    <Text className='text-white text-19 ml-1'>
+                                        {t('choose_limit')}
                                     </Text>
                                 </View>
                             </View>
@@ -105,11 +108,11 @@ const home = () => {
             <View className={' justify-start items-start w-11/12 flex-1 py-2'}>
                 <View className={' flex flex-row'}>
                     <View>
-                        <Text className={'text-black text-17 font-bold'}> Products </Text>
+                        <Text className={'text-black text-17 font-bold'}> {t('previously_scanned')} </Text>
                     </View>
                     <View className={'mt-1 -ml-2 flex flex-row'}>
                         <Entypo name={'dot-single'} size={16} color={'gray'} />
-                        <Text className={'text-gray -mt-0.5 -ml-1  text-13'}>{limitData.products?.length} goods</Text>
+                        <Text className={'text-gray -mt-0.5 -ml-1  text-13'}>{limitData.products?.length} {t('goods')} </Text>
                     </View>
                 </View>
                 {limitData.products?.length == 0 &&
