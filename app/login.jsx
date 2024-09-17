@@ -1,20 +1,23 @@
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, BackHandler } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { TextInputMask } from "react-native-masked-text";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { SkypeIndicator } from "react-native-indicators";
-import { Redirect, router } from "expo-router";
+import { router, useFocusEffect, useNavigation } from "expo-router";
 import { cleanPhoneNumber } from "../utils/formatPhone";
 import axios from "axios";
 import { URL } from "../api/const";
 import FlashMessage, { showMessage } from "react-native-flash-message";
 import { useTranslation } from "react-i18next";
-
+import { setToken } from "../store/Slicers/LoginSlicer";
+import { useDispatch } from "react-redux";
 
 const Login = () => {
     const { t } = useTranslation()
+    const dispatch = useDispatch()
+    const navigation = useNavigation();
     const [user, setUser] = useState({
-        phone: '',
+        phone: '+998',
         password: '',
     });
     const getInputValue = (name, value) => {
@@ -24,8 +27,6 @@ const Login = () => {
         });
 
     }
-
-
     const [loading, setLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(true);
 
@@ -36,24 +37,42 @@ const Login = () => {
                 method: 'post',
                 data: { ...user, phone: cleanPhoneNumber(user.phone) },
             })
-            console.log('login', res);
-            if (res.statusCode === 200) {
-                router.push('home');
+            if (res.status === 200) {
+                dispatch(setToken(res.data?.access_token))
+                router.push('/home')
             }
         } catch (error) {
-            console.log(error.message);
+            console.log(error.message, 'error');
             showMessage({
-                message: error.message,
-                type: "warning",
+                message: 'login failed',
+                type: "danger",
             });
         }
         finally {
             setLoading(false);
         }
     }
-    if (!loading) {
-        <Redirect href={'home'} />
-    }
+    useFocusEffect(
+        useCallback(() => {
+            const backAction = () => {
+                Alert.alert(t('close'), t('closeQuestion'), [
+                    {
+                        text: t('no'),
+                        onPress: () => null,
+                        style: 'cancel',
+                    },
+                    {
+                        text: t('yes'),
+                        onPress: () => BackHandler.exitApp(),
+                    },
+                ]);
+                return true;
+            };
+            BackHandler.addEventListener('hardwareBackPress', backAction);
+            return () => BackHandler.removeEventListener('hardwareBackPress', backAction);
+        }, [navigation])
+    );
+
     return (
         <View className={'flex-1 justify-center w-full items-center bg-bg-default'}>
             <FlashMessage position="top" duration={3000} style={{ top: 30 }} />
@@ -76,10 +95,10 @@ const Login = () => {
                     keyboardType={'phone-pad'}
                     placeholder={'+998'}
                 />
-                {user.phone.length > 0 &&
+                {user.phone.length !== 4 &&
                     <View className={'absolute right-5 top-2/4'}>
-                        <TouchableOpacity onPress={() => setUser({ ...user, phone: '' })}>
-                            <Ionicons name="close-circle" size={22} color="gray" />
+                        <TouchableOpacity onPress={() => setUser({ ...user, phone: '+998' })}>
+                            <Ionicons name="refresh-circle-outline" size={22} color="gray" />
                         </TouchableOpacity>
                     </View>
                 }

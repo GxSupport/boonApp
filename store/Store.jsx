@@ -1,15 +1,15 @@
 import { configureStore } from '@reduxjs/toolkit'
-import UserSlicer from './Slicers/UserSlicer'
+import LoginSlicer from './Slicers/LoginSlicer'
 import ProductSlicer from './Slicers/Products'
 import CardSlicer from './Slicers/CardSlicer'
-import ThemeSlicer from './Slicers/ThemeSlicer'
+import SwitchState from './Slicers/SwitchState'
 
 export const Store = configureStore({
   reducer: {
-    UserSlicer,
+    LoginSlicer,
     ProductSlicer,
     CardSlicer,
-    ThemeSlicer
+    SwitchState
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

@@ -1,6 +1,6 @@
 import { Alert, BackHandler, FlatList, Modal, Platform, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 import { Entypo, Ionicons } from "@expo/vector-icons";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import ItemProduct from "../../../components/itemProduct";
 import Limit from "../../../components/limit";
 import ProgressLimit from "../../../components/progressLimit";
@@ -8,12 +8,13 @@ import Loading from "../../../components/Loading";
 import { useDispatch, useSelector } from "react-redux";
 import { getLimitData } from "../../../store/Slicers/Products";
 import { useTranslation } from "react-i18next";
+import { useFocusEffect, useNavigation } from "expo-router";
 
 const home = () => {
     const platform = Platform.OS;
     const dispatch = useDispatch()
     const { t } = useTranslation()
-
+    const navigation = useNavigation();
     const [isModal, setModal] = useState(false);
     const [chooseCard, setChooseCard] = useState(null);
     const { limitData, isLoading } = useSelector(state => state.ProductSlicer)
@@ -51,10 +52,31 @@ const home = () => {
         );
         return () => backHandler.remove();
     }, [isModal]);
+    useFocusEffect(
+        useCallback(() => {
+            const backAction = () => {
+                Alert.alert(t('close'), t('closeQuestion'), [
+                    {
+                        text: t('no'),
+                        onPress: () => null,
+                        style: 'cancel',
+                    },
+                    {
+                        text: t('yes'),
+                        onPress: () => BackHandler.exitApp(),
+                    },
+                ]);
+                return true;
+            };
+            BackHandler.addEventListener('hardwareBackPress', backAction);
+            return () => BackHandler.removeEventListener('hardwareBackPress', backAction);
+        }, [navigation])
+    );
 
     if (isLoading) {
         return <Loading loading={isLoading} />
     }
+
     return (
         <SafeAreaView className={'h-full pt-3 items-center bg-bg-default'}>
             <Modal
@@ -69,15 +91,21 @@ const home = () => {
                     <Text className={'text-xl font-bold px-5 pb-3 text-center text-black'}> {t('limit_select')}  </Text>
                     <ScrollView>
                         {
-                            limitData.limit_list?.data.map((item, index) => (
-                                <Pressable className={'w-full'} key={index.toString()}
-                                    onPress={() => hanldeChooseCard(item?.guidFinProduct)}
-                                >
-                                    <View className={'w-full mb-5 justify-center items-center overflow-visible h-22'}>
-                                        <Limit limit={item.limit} title={item.month_text} index={index} />
-                                    </View>
-                                </Pressable>
-                            ))
+                            limitData.limit_list?.data ? (
+                                limitData.limit_list?.data.map((item, index) => (
+                                    <Pressable className={'w-full'} key={index.toString()}
+                                        onPress={() => hanldeChooseCard(item?.guidFinProduct)}
+                                    >
+                                        <View className={'w-full mb-5 justify-center items-center overflow-visible h-22'}>
+                                            <Limit limit={item.limit} title={item.month_text} index={index} />
+                                        </View>
+                                    </Pressable>
+                                ))
+                            ) : (
+                                <Text className='text-center'>
+                                    {t('no_limit')}
+                                </Text>
+                            )
                         }
                     </ScrollView>
                 </View>
@@ -120,7 +148,7 @@ const home = () => {
                         <Text className={'text-gray text-15 text-center'}>Scan the QR code to add the product to the list</Text>
                     </View>
                 }
-                {limitData.products?.length > 0 &&
+                {limitData.products?.length > 0 ?
                     <ScrollView>
                         <View className={platform === 'ios' ? 'w-full' : ' w-full h-full'}>
                             <FlatList
@@ -132,6 +160,13 @@ const home = () => {
                             />
                         </View>
                     </ScrollView>
+                    : (
+                        <View className='items-center justify-center flex-1 flex-col w-full'>
+                            <Text>
+                                {t('no_data')}
+                            </Text>
+                        </View>
+                    )
                 }
             </View>
         </SafeAreaView>

@@ -10,13 +10,14 @@ const IndexStact = () => {
 		</Provider>
 	)
 }
+
 export default IndexStact;
 
 export const Layout = () => {
 	const { t } = useTranslation();
-	//  const theme = useSelector(state => state.ThemeSlicer.theme);
+	//  const theme = useSelector(state => state.SwitchState.theme);
 	return (
-		<Stack >
+		<Stack>
 			<Stack.Screen name="login" options={{ headerShown: false }} />
 			<Stack.Screen name="(tabs)" options={{ headerShown: false }} />
 			<Stack.Screen name="product/[id]" options={{

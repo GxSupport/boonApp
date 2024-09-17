@@ -1,24 +1,22 @@
 import { View, StyleSheet, Text } from "react-native";
 import { useEffect, useState } from "react";
 import { router, useNavigation } from "expo-router";
-import * as Secure from 'expo-secure-store';
 import * as SplashScreen from 'expo-splash-screen';
 import { useFonts } from "expo-font";
+import { useDispatch, useSelector } from "react-redux";
+import { getToken } from "../store/Slicers/LoginSlicer";
+import { useTranslation } from "react-i18next";
 export default function Index() {
+  const { access_token } = useSelector(state => state.LoginSlicer)
   const [progress, setProgress] = useState(0);
-  const [token, setToken] = useState(null);
-
   const navigations = useNavigation()
-
+  const dispatch = useDispatch()
   useEffect(() => {
     navigations.setOptions({
       title: "",
       headerShown: false,
     })
-  }, [])
-
-  useEffect(() => {
-    Secure.setItem('access_token', 'test');
+    dispatch(getToken())
     const interval = setInterval(() => {
       setProgress((oldProgress) => {
         if (oldProgress === 100) {
@@ -32,16 +30,13 @@ export default function Index() {
   }, []);
   useEffect(() => {
     if (progress === 100) {
-      if (!token) {
-        router.push('home');
+      if (!access_token) {
+        router.push('/login');
       } else {
-        router.push('home');
+        router.push('/home');
       }
     }
-
-  }, [progress, token, router]);
-
-
+  }, [progress, access_token, router]);
   const [loaded, error] = useFonts({
     "syne": require('../assets/fonts/Syne-Bold.ttf'),
   })

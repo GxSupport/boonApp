@@ -1,28 +1,20 @@
 import { Image, Pressable, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { useEffect, useState } from "react";
-import { getItem, setItem } from "../../../utils/AsyncStorage";
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import i18n from "../../../utils/i18n";
 import { useDispatch, useSelector } from "react-redux";
-import { getTheme, toggleTheme } from "../../../store/Slicers/ThemeSlicer";
-const Decor = () => {
-	const { theme } = useSelector(state => state.ThemeSlicer);
-	const dispatch = useDispatch()
-	const [currentLang, setCurrentLang] = useState('uz')
-	const { t } = useTranslation();
+import { changeLangue, getLanguage, getTheme, toggleTheme } from "../../../store/Slicers/SwitchState";
 
+import Loading from "../../../components/Loading";
+const Decor = () => {
+	const { theme, language, langLoad, themeLoad } = useSelector(state => state.SwitchState);
+	const dispatch = useDispatch()
+	const { t } = useTranslation();
 	useEffect(() => {
-		const loadLang = async () => {
-			const storedLang = await getItem('lang');
-			if (storedLang) {
-				setCurrentLang(storedLang);
-				i18n.changeLanguage(storedLang);
-			}
-		};
 		dispatch(getTheme());
-		loadLang();
+		dispatch(getLanguage())
 	}, [])
+
 	const icons = [
 		require('../../../assets/icons/1.png'),
 		require('../../../assets/icons/2.png'),
@@ -55,15 +47,9 @@ const Decor = () => {
 			bg: require('../../../assets/icons/white.png'),
 		},
 	]
-
-	const changeLangue = async (lang) => {
-		await setItem('lang', lang)
-		setCurrentLang(lang)
-		i18n.changeLanguage(lang)
-	}
-
 	return (
 		<View className={`flex justify-start h-full items-center bg-bg-default `} >
+			<Loading loading={langLoad || themeLoad} />
 			<View className={'mt-7 w-11/12 '}>
 				<View>
 					<Text className={'text-19'}>{t('theme_apk')}</Text>
@@ -111,7 +97,6 @@ const Decor = () => {
 							)
 						})
 					}
-
 				</View>
 				<View className={'w-full my-4'}>
 					<Text className={'text-13'}> {t('lang_scheme')} </Text>
@@ -120,18 +105,20 @@ const Decor = () => {
 					{
 						langData.map((item) => (
 							<Pressable
-								onPress={() => changeLangue(item.lang)}
+								onPress={() => {
+									dispatch(changeLangue(item.lang))
+								}}
 								key={item.id} className={'border border-gray-200 flex flex-row rounded-lg bg-white py-2 px-4 items-center justify-between'}>
 								<View className={'flex flex-row items-center gap-2'}>
 									<View>
 										<Image source={item.icon} className={'w-8 h-8'} />
 									</View>
 									<View>
-										<Text className={`text-15 ${item.lang === currentLang ? 'font-medium tracking-wider' : ''} `}>{item.name}</Text>
+										<Text className={`text-15 ${item.lang === language ? 'font-medium tracking-wider' : ''} `}>{item.name}</Text>
 									</View>
 								</View>
 								<View>
-									<Ionicons size={22} name={item.lang === currentLang ? "radio-button-on" : "radio-button-off"} color={item.lang === currentLang ? "#007FFF" : "gray"} />
+									<Ionicons size={22} name={item.lang === language ? "radio-button-on" : "radio-button-off"} color={item.lang === language ? "#007FFF" : "gray"} />
 								</View>
 							</Pressable>
 						))

@@ -16,6 +16,7 @@ export const getItem = async (key) => {
     return null;
   }
 };
+
 export const removeItem = async (key) => {
   try {
     await AsyncStorage.removeItem(key);

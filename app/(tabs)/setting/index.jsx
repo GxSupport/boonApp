@@ -1,19 +1,49 @@
-import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { Alert, Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import formatPhone from "../../../utils/formatPhone";
 import { Entypo, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { router } from "expo-router";
+import { router, useNavigation } from "expo-router";
 import { useTranslation } from "react-i18next";
-
+import { useDispatch, useSelector } from "react-redux";
+import { removeToken } from "../../../store/Slicers/LoginSlicer";
+import { useEffect } from "react";
+import { CommonActions } from '@react-navigation/native';
+import { SkypeIndicator } from "react-native-indicators";
+import Loading from "../../../components/Loading";
 const SettingPage = () => {
+    const { logOut_load } = useSelector(state => state.LoginSlicer)
     const { t } = useTranslation()
+    const navigation = useNavigation()
     const account = {
         name: 'Idsmoder',
         phone: 998913452724,
         id: 1
     }
+    const dispatch = useDispatch()
+    const logOut = () => {
+        Alert.alert(t('logoutHeading'), t('alertQuestion'), [
+            {
+                text: t('cancel'),
+                style: 'cancel',
+            },
+            {
+                text: t('ok'), onPress: () => {
+                    dispatch(removeToken());
+                    router.push('/login')
+                    navigation.dispatch(
+                        CommonActions.reset({
+                            index: 0,
+                            routes: [{ name: 'login' }]
+                        })
+                    );
+                }
+            },
+        ]);
+
+    }
     return (
         <ScrollView className='h-full bg-bg-default'>
+            <Loading loading={logOut_load} />
             <View className={'flex justify-center items-center  h-full'}>
                 <View className={'mt-10 justify-center items-center '}>
                     <View>
@@ -87,16 +117,16 @@ const SettingPage = () => {
                             </TouchableOpacity>
                         </View>
                     </View>
-                    <View className={'mt-5 w-11/12 h-14 justify-center rounded-2xl mb-5 bg-bg-logout items-center touch-pan-down'}>
+                    <TouchableOpacity disabled={!logOut_load} className={'mt-5 w-11/12 h-14 justify-center rounded-2xl mb-5 bg-red-400 items-center touch-pan-down'}>
                         <View className={'flex flex-row'}>
                             <View className={'justify-center items-center rotate-180'}>
-                                <Ionicons name="exit" size={20} color="#FF5865" />
+                                <Ionicons name="exit" size={20} color="white" />
                             </View>
                             <View className={'justify-center items-center ml-2'}>
-                                <Text className={'text-17 text-logout'} onPress={() => router.push('/login')}> {t('logout')} </Text>
+                                <Text className={'text-17 text-white'} onPress={logOut}> {t('logout')} </Text>
                             </View>
                         </View>
-                    </View>
+                    </TouchableOpacity>
                 </View>
             </View>
         </ScrollView>
