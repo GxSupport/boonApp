@@ -13,12 +13,21 @@ const id = () => {
 	const [singleInfo, setSingleInfo] = useState(null)
 	const { params } = useRoute();
 	const { t } = useTranslation()
+	const link = "https://gateway.texnomart.uz/api/common/v1/stock/product-characters?unique_id="
 	const getSingleProduct = async () => {
 		setLoading(true)
-		if (params.id) {
+		const _id = params.id?.split('==')[0];
+		const show = params.id?.split('==')[1];
+		if (_id) {
 			try {
-				const res = await api(`application/product_info/${params?.id}`);
-				setSingleInfo(res.data)
+				if (show) {
+					const res = await api(`${link}${_id}`);
+					setSingleInfo(res.data?.data?.data)
+				}
+				else {
+					const res = await api(`/application/product_info/${_id}`);
+					setSingleInfo(res.data?.info)
+				}
 			} catch (error) {
 				console.log(error);
 			}
@@ -34,11 +43,10 @@ const id = () => {
 	if (isLoading) {
 		return <Loading loading={isLoading} />
 	}
-	let sections = singleInfo?.info.map(section => ({
+	sections = singleInfo?.map(section => ({
 		title: section.name,
 		data: section.characters,
 	}));
-
 	return (
 		<SafeAreaView style={styles.container}>
 			{singleInfo ? (

@@ -18,6 +18,7 @@ const home = () => {
     const [isModal, setModal] = useState(false);
     const [chooseCard, setChooseCard] = useState(null);
     const { limitData, isLoading } = useSelector(state => state.ProductSlicer)
+
     useEffect(() => {
         dispatch(getLimitData())
     }, [])
@@ -157,6 +158,7 @@ const home = () => {
                                     ({ item }) => (<ItemProduct prop={item} page={'home'} />)
                                 } keyExtractor={(_, index) => index}
                                 scrollEnabled={false}
+
                             />
                         </View>
                     </ScrollView>

@@ -1,10 +1,8 @@
-import { View, Text, Button, StatusBar, StyleSheet, Linking, AppState } from "react-native";
+import { View, Text, Button, StyleSheet, AppState } from "react-native";
 import { Camera, CameraView, useCameraPermissions } from "expo-camera";
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { requestCameraPermissionsAsync } from "expo-camera/legacy";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useFocusEffect } from "@react-navigation/native";
-import api from "../../../api/api";
 import extractDynamicPart from "../../../utils/extractDynamicPart";
 import { router } from "expo-router";
 import FlashMessage, { showMessage } from "react-native-flash-message";
@@ -15,7 +13,7 @@ export default function Scan() {
     const appState = useRef(AppState.currentState)
     const successCode = async (barcode) => {
         if (barcode.data && extractDynamicPart(barcode.data)) {
-            router.push(`/product/${extractDynamicPart(barcode.data)}`)
+            router.push(`/product/${extractDynamicPart(barcode.data)}==true`)
         }
         else {
             showMessage({
@@ -52,13 +50,6 @@ export default function Scan() {
         </View>
     }
     if (!hasPermission.granted) {
-        useFocusEffect(
-            useCallback(() => {
-                StatusBar.setBarStyle('default');
-                return () => {
-                    StatusBar.setBarStyle('dark-content');
-                };
-            }, []))
         return (
             <View style={styles.container} >
                 <Text style={styles.cameraText}>Для сканирования QR кода необходимо разрешение на использование камеры</Text>
@@ -98,5 +89,4 @@ const styles = StyleSheet.create({
         paddingHorizontal: 5,
         lineHeight: 25
     },
-
 })

@@ -59,7 +59,7 @@
   "purchase": "Sotib olish",
   "sale_price": "Sotish narxi",
   "every": "Hammasi",
-  "cash": "Qabul qilgandan keyin naqd pul",
+  "cash": "Naqd pul",
   "pick_up_point": "Chiqarilgan joydan olish",
   "delivery": "Uyga yetkazib berish",
   "delivery_address": "Yetkazib berish manzili",
@@ -77,5 +77,11 @@
   "no": "Yo'q",
   "yes": "Ha",
   "close": "Yopish",
-  "closeQuestion": "Siz ilovani yopmoqchimisiz?"
+  "closeQuestion": "Siz ilovani yopmoqchimisiz?",
+  "phone_empty":"Telefon talab qilinadi",
+  "phone_error":"Telefon yaroqsiz. U +998 bilan boshlanishi va undan keyin 9 ta raqamdan iborat bo'lishi kerak",
+  "password_empty":"Parol talab qilinadi",
+  "password_error":"Parol kamida 6 ta belgidan iborat bo'lishi kerak",
+  "response_error":"Parol yoki telefon nomer xato",
+  "invalid_inputs":"Malumotlar to'liq to'ldirilmadi"
 }

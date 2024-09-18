@@ -5,7 +5,6 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useFonts } from "expo-font";
 import { useDispatch, useSelector } from "react-redux";
 import { getToken } from "../store/Slicers/LoginSlicer";
-import { useTranslation } from "react-i18next";
 export default function Index() {
   const { access_token } = useSelector(state => state.LoginSlicer)
   const [progress, setProgress] = useState(0);
@@ -31,9 +30,9 @@ export default function Index() {
   useEffect(() => {
     if (progress === 100) {
       if (!access_token) {
-        router.push('/login');
+        router.replace('/login');
       } else {
-        router.push('/home');
+        router.replace('/home');
       }
     }
   }, [progress, access_token, router]);
