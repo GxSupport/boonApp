@@ -4,10 +4,11 @@ import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { changeLangue, getLanguage, getTheme, toggleTheme } from "../../../store/Slicers/SwitchState";
-
+import { styled, useColorScheme } from "nativewind";
 import Loading from "../../../components/Loading";
 const Decor = () => {
 	const { theme, language, langLoad, themeLoad } = useSelector(state => state.SwitchState);
+	const { colorScheme, toggleColorScheme } = useColorScheme();
 	const dispatch = useDispatch()
 	const { t } = useTranslation();
 	useEffect(() => {
@@ -82,13 +83,16 @@ const Decor = () => {
 									key={item.id}
 									onPress={() => {
 										dispatch(toggleTheme(item.name))
+										toggleColorScheme()
+										console.log(colorScheme);
+
 									}}
 								>
 									<View className={`border  rounded-md overflow-hidden ${item.name === theme ? 'border-blue-400' : 'border-transparent'} `} >
 										<Image source={item.bg} className={'w-16 h-28'} />
 									</View>
 									<View className={'mt-2 items-center'}>
-										<Text className={'text-13'}> {t(item.name)} </Text>
+										<Text className={'text-13'}> {t(item.name)} </Text >
 										<View className={'mt-1'}>
 											<Ionicons size={22} name={item.name === theme ? "radio-button-on" : "radio-button-off"} color={item.name === theme ? "#007FFF" : "gray"} />
 										</View>

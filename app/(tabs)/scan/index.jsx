@@ -1,4 +1,4 @@
-import { View, Text, Button, StyleSheet, AppState } from "react-native";
+import { View, Text, Button, StyleSheet, AppState, ActivityIndicator } from "react-native";
 import { Camera, CameraView, useCameraPermissions } from "expo-camera";
 import React, { useEffect, useRef } from "react";
 import { requestCameraPermissionsAsync } from "expo-camera/legacy";
@@ -6,9 +6,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import extractDynamicPart from "../../../utils/extractDynamicPart";
 import { router } from "expo-router";
 import FlashMessage, { showMessage } from "react-native-flash-message";
+import { useTranslation } from "react-i18next";
+import { Linking } from "react-native";
 
 export default function Scan() {
-    const [hasPermission, setHasPermission] = useCameraPermissions();
+    const { t } = useTranslation()
+    const [hasPermission, setHasPermission] = useCameraPermissions()
     const qrLock = useRef(false)
     const appState = useRef(AppState.currentState)
     const successCode = async (barcode) => {
@@ -17,12 +20,11 @@ export default function Scan() {
         }
         else {
             showMessage({
-                message: 'Failed to scan, show another qr code',
+                message: t('scannError'),
                 type: "danger",
                 duration: 3000,
                 style: { top: 30 }
             });
-
         }
     }
     useEffect(() => {
@@ -44,19 +46,33 @@ export default function Scan() {
         };
     }, []);
 
-    if (!hasPermission) {
-        return <View style={styles.container} >
-            <Text style={styles.cameraText}>Для сканирования QR кода необходимо разрешение на использование камеры</Text>
-        </View>
-    }
-    if (!hasPermission.granted) {
+    if (hasPermission === null) {
         return (
-            <View style={styles.container} >
-                <Text style={styles.cameraText}>Для сканирования QR кода необходимо разрешение на использование камеры</Text>
-                <Button title={'Разрешить'} onPress={requestCameraPermissionsAsync} />
+            <View style={styles.container}>
+                <ActivityIndicator size="large" color="#ffffff" />
+                <Text style={styles.loadingText}> {t('requesting_permission...')} </Text>
             </View>
         )
     }
+
+    if (!hasPermission.granted) {
+        return (
+            <View style={styles.container}>
+                <Text style={styles.cameraText}>
+                    {t('permission')}
+                </Text>
+                <Button title={t('allow_camera')} onPress={async () => {
+                    const { status } = await requestCameraPermissionsAsync();
+                    if (status !== 'granted') {
+                        Linking.openSettings();
+                    } else {
+                        setHasPermission(true);
+                    }
+                }} />
+            </View>
+        );
+    }
+
     return (
         <SafeAreaView>
             <FlashMessage position="top" />
@@ -86,7 +102,12 @@ const styles = StyleSheet.create({
     },
     cameraText: {
         color: 'white',
-        paddingHorizontal: 5,
-        lineHeight: 25
+        paddingHorizontal: 10,
+        marginBottom: 10,
+        textAlign: 'center',
+    },
+    loadingText: {
+        color: 'white',
+        marginTop: 10,
     },
 })
