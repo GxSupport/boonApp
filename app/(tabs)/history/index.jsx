@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { SafeAreaView, ScrollView, SectionList, StyleSheet, Text, View } from "react-native";
 import Octicons from '@expo/vector-icons/Octicons';
 import { TouchableOpacity } from "react-native";
@@ -6,7 +6,9 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { formatSum } from "../../../utils/formatSum";
 import ItemProduct from "../../../components/itemProduct";
+import themeContext from "../../../theme/themeContext";
 const History = () => {
+	const Th = useContext(themeContext)
 	const [history, setHistory] = useState([
 		{
 			id: 1,
@@ -254,11 +256,9 @@ const History = () => {
 		title: section.title,
 		data: section.data,
 	}));
-
-
+	
 	return (
-		<SafeAreaView className={'px-3 bg-bg-default h-full'} >
-			{/* <ScrollView> */}
+		<SafeAreaView className={'px-3 h-full'} style={{ backgroundColor: Th.backgroundColor }} >
 			<View>
 				<SectionList
 					sections={sections}
@@ -272,13 +272,12 @@ const History = () => {
 					)}
 					stickySectionHeadersEnabled={true}
 					renderSectionHeader={({ section }) => (
-						<Text className={'text-17 px-3 pt-3 bg-[#F7F6FB]'}>
+						<Text className={'text-17 px-3 pt-3'} style={{ backgroundColor: Th.backgroundColor, color:Th.color }} >
 							{section.title} <Text className={'text-sm text-slate-500'}> <Octicons name="dot-fill" size={8} /> {section.data.length}  продукта  </Text>
 						</Text>
 					)}
 				/>
 			</View>
-			{/* </ScrollView> */}
 		</SafeAreaView>
 	)
 }

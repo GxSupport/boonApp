@@ -1,13 +1,15 @@
 import { Image, Pressable, SectionList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useRoute } from "@react-navigation/native";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Loading from "../../components/Loading";
 import { SafeAreaView } from "react-native-safe-area-context";
 import api from "../../api/api";
 import createDashedLine from "../../utils/createDashedLine";
 import ImageView from "react-native-image-viewing";
 import { useTranslation } from "react-i18next";
+import themeContext from "../../theme/themeContext";
 const id = () => {
+	const Th = useContext(themeContext)
 	const [isLoading, setLoading] = useState(false)
 	const [visible, setIsVisible] = useState(false);
 	const [singleInfo, setSingleInfo] = useState(null)
@@ -48,10 +50,10 @@ const id = () => {
 		data: section.characters,
 	}));
 	return (
-		<SafeAreaView style={styles.container}>
+		<SafeAreaView style={[styles.container, { backgroundColor: Th.backgroundColor }]}>
 			{singleInfo ? (
 				<View style={styles.wrapper}>
-					<Text style={styles.headerText}>
+					<Text style={[styles.headerText, { color: Th.color }]}  >
 						{singleInfo?.name}
 					</Text>
 					<ImageView
@@ -77,32 +79,33 @@ const id = () => {
 						keyExtractor={(item, index) => item + index}
 						renderItem={({ item }) => (
 							<View style={styles.character}>
-								<Text style={styles.characterName}
+								<Text style={[styles.characterName, { color: Th.color }]}
 								>{item.name}: </Text>
 								<Text style={styles.characterName} >
 									{createDashedLine(item?.name, item.value, 45)}
 								</Text>
-								<Text style={styles.characterValue}>{item.value}</Text>
+								<Text style={[styles.characterValue, { color: Th.color }]}>{item.value}</Text>
 							</View>
 						)}
 						renderSectionHeader={({ section: { title } }) => (
-							<Text style={styles.sectionTitle}>{title}</Text>
+							<Text style={[styles.sectionTitle, { color: Th.color, backgroundColor: Th.backgroundColor }]} >{title}</Text>
 						)}
 						stickySectionHeadersEnabled={true}
 						contentContainerStyle={styles.scrollViewContent}
 					/>
 					<TouchableOpacity style={styles.button}>
-						<Text style={styles.buttonText}> {t('add_cart')} </Text>
+						<Text style={[styles.buttonText, { color: Th.color }]}> {t('add_cart')} </Text>
 					</TouchableOpacity>
 				</View>
 			) : (
-				<View style={styles.emptyState}>
-					<Text style={styles.emptyStateText}>
+				<View style={[styles.emptyState, { backgroundColor: Th.backgroundColor }]} >
+					<Text style={[styles.emptyStateText, { color: Th.color }]}>
 						{t('no_data')}
 					</Text>
 				</View>
-			)}
-		</SafeAreaView>
+			)
+			}
+		</SafeAreaView >
 	)
 }
 export default id;
@@ -110,7 +113,6 @@ export default id;
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: "white"
 	},
 	wrapper: {
 		flex: 1,
@@ -129,9 +131,7 @@ const styles = StyleSheet.create({
 	sectionTitle: {
 		fontSize: 19,
 		fontWeight: 'bold',
-		color: 'black',
 		marginBottom: 5,
-		backgroundColor: "white"
 	},
 	character: {
 		flexDirection: 'row',

@@ -1,16 +1,17 @@
 import { Image, Pressable, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { changeLangue, getLanguage, getTheme, toggleTheme } from "../../../store/Slicers/SwitchState";
-import { styled, useColorScheme } from "nativewind";
 import Loading from "../../../components/Loading";
+import themeContext from "../../../theme/themeContext";
+
 const Decor = () => {
 	const { theme, language, langLoad, themeLoad } = useSelector(state => state.SwitchState);
-	const { colorScheme, toggleColorScheme } = useColorScheme();
 	const dispatch = useDispatch()
 	const { t } = useTranslation();
+	const Th = useContext(themeContext)
 	useEffect(() => {
 		dispatch(getTheme());
 		dispatch(getLanguage())
@@ -49,14 +50,14 @@ const Decor = () => {
 		},
 	]
 	return (
-		<View className={`flex justify-start h-full items-center bg-bg-default `} >
+		<View className={`flex justify-start h-full items-center bg-bg-default`} style={{backgroundColor: Th.backgroundColor}} >
 			<Loading loading={langLoad || themeLoad} />
-			<View className={'mt-7 w-11/12 '}>
+			<View className={'mt-7 w-11/12'}>
 				<View>
-					<Text className={'text-19'}>{t('theme_apk')}</Text>
+					<Text style={{ color: Th.color }} className={'text-19'}>{t('theme_apk')}</Text>
 				</View>
 				<View className={'w-full my-4'}>
-					<Text className={'text-13'}>{t('icon_apk')}</Text>
+					<Text style={{ color: Th.color }} className={'text-13'}>{t('icon_apk')}</Text>
 				</View>
 				<View className={'flex flex-row'}>
 					<View className={'rounded-lg'}>
@@ -73,9 +74,9 @@ const Decor = () => {
 					</View>
 				</View>
 				<View className={'w-full my-4'}>
-					<Text className={'text-13'}> {t('color_scheme')} </Text>
+					<Text style={{ color: Th.color }} className={'text-13'}> {t('color_scheme')} </Text>
 				</View>
-				<View className={'flex flex-row gap-4'}>
+				<View className={'flex flex-row self-start gap-2'}  >
 					{
 						themeData.map((item) => {
 							return (
@@ -83,16 +84,14 @@ const Decor = () => {
 									key={item.id}
 									onPress={() => {
 										dispatch(toggleTheme(item.name))
-										toggleColorScheme()
-										console.log(colorScheme);
-
+										console.log(Th);
 									}}
 								>
 									<View className={`border  rounded-md overflow-hidden ${item.name === theme ? 'border-blue-400' : 'border-transparent'} `} >
-										<Image source={item.bg} className={'w-16 h-28'} />
+										<Image source={item.bg} className={'w-16 h-28'} resizeMode="cover" />
 									</View>
 									<View className={'mt-2 items-center'}>
-										<Text className={'text-13'}> {t(item.name)} </Text >
+										<Text className={'text-13'} style={{ color: Th.color }} > {t(item.name)} </Text >
 										<View className={'mt-1'}>
 											<Ionicons size={22} name={item.name === theme ? "radio-button-on" : "radio-button-off"} color={item.name === theme ? "#007FFF" : "gray"} />
 										</View>
@@ -103,7 +102,7 @@ const Decor = () => {
 					}
 				</View>
 				<View className={'w-full my-4'}>
-					<Text className={'text-13'}> {t('lang_scheme')} </Text>
+					<Text className={'text-13'} style={{ color: Th.color }}> {t('lang_scheme')} </Text>
 				</View>
 				<View className='felx flex-col gap-2'>
 					{
@@ -133,6 +132,7 @@ const Decor = () => {
 				<Text className={'text-center text-white'}> {t('change_design')} </Text>
 			</View>
 		</View>
+
 	)
 }
 export default Decor;

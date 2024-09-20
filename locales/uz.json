@@ -78,8 +78,9 @@
   "yes": "Ha",
   "close": "Yopish",
   "closeQuestion": "Siz ilovani yopmoqchimisiz?",
+  "close_text":"Ilova yopish",
   "phone_empty": "Telefon talab qilinadi",
-  "phone_error": "Telefon yaroqsiz. U +998 bilan boshlanishi va undan keyin 9 ta raqamdan iborat bo'lishi kerak",
+  "phone_error": "Boshlanishi +998 bilan va 12 ta raqamdan iborat bo'lishi kerak",
   "password_empty": "Parol talab qilinadi",
   "password_error": "Parol kamida 6 ta belgidan iborat bo'lishi kerak",
   "response_error": "Parol yoki telefon nomer xato",
@@ -87,5 +88,6 @@
   "scannError": "Skaner qilib bo'lmadi, boshqa QR kodni ko'rsating",
   "permission":"QR kodini skanerlash uchun kamera ruxsati talab qilinadi",
   "allow_camera":"Ruxsat bering",
-  "requesting_permission":"Ruxsat so'ralmoqda..."
+  "requesting_permission":"Ruxsat so'ralmoqda...",
+  "scan_to_add": "Ro'yxatingizga element qo'shish uchun QR kodini skanerlang"
 }

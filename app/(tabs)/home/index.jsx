@@ -1,6 +1,6 @@
-import { Alert, BackHandler, FlatList, Modal, Platform, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Alert, BackHandler, FlatList, Platform, Pressable, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, View } from "react-native";
 import { Entypo, Ionicons } from "@expo/vector-icons";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import ItemProduct from "../../../components/itemProduct";
 import Limit from "../../../components/limit";
 import ProgressLimit from "../../../components/progressLimit";
@@ -9,6 +9,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { getLimitData } from "../../../store/Slicers/Products";
 import { useTranslation } from "react-i18next";
 import { useFocusEffect, useNavigation } from "expo-router";
+import themeContext from "../../../theme/themeContext";
+import DialogComponent from "../../../components/Dialog";
+import Modal from "../../../components/Modal";
 
 const home = () => {
     const platform = Platform.OS;
@@ -18,7 +21,10 @@ const home = () => {
     const [isModal, setModal] = useState(false);
     const [chooseCard, setChooseCard] = useState(null);
     const { limitData, isLoading } = useSelector(state => state.ProductSlicer)
-
+    const [quit, setQuit] = useState(false)
+    const [modalVisible, setModalVisible] = useState(false);
+    const [isCard, setCard] = useState(false)
+    const Th = useContext(themeContext)
     useEffect(() => {
         dispatch(getLimitData())
     }, [])
@@ -56,17 +62,7 @@ const home = () => {
     useFocusEffect(
         useCallback(() => {
             const backAction = () => {
-                Alert.alert(t('close'), t('closeQuestion'), [
-                    {
-                        text: t('no'),
-                        onPress: () => null,
-                        style: 'cancel',
-                    },
-                    {
-                        text: t('yes'),
-                        onPress: () => BackHandler.exitApp(),
-                    },
-                ]);
+                setQuit(true)
                 return true;
             };
             BackHandler.addEventListener('hardwareBackPress', backAction);
@@ -79,17 +75,27 @@ const home = () => {
     }
 
     return (
-        <SafeAreaView className={'h-full pt-3 items-center bg-bg-default'}>
-            <Modal
+        <SafeAreaView className={'h-full pt-3 items-center'} style={{ backgroundColor: Th.backgroundColor }}>
+            <DialogComponent isAlert={quit} setAlert={setQuit} description={t('closeQuestion')} title={t('close_text')}
+                handle={BackHandler.exitApp}
+                handleTitle={t('close')}
+            />
+            <StatusBar
+                backgroundColor={Th.black_bg_Color}
+                barStyle={Th.barStyle}
+            />
+            <Modal visible={modalVisible} onClose={() => setModalVisible(false)} />
+            {/* <Modal
                 animationType="slide"
                 visible={isModal}
                 onRequestClose={() => setModal(false)}
+                style={{ backgroundColor: Th.backgroundColor }}
             >
                 <Pressable onPress={() => setModal(false)} style={styles.closeBox} >
                     <Ionicons name="close" style={styles.closebtn} />
                 </Pressable>
                 <View>
-                    <Text className={'text-xl font-bold px-5 pb-3 text-center text-black'}> {t('limit_select')}  </Text>
+                    <Text className={'text-xl font-bold px-5 pb-3 text-center'} style={{ color: Th.color }} > {t('limit_select')}  </Text>
                     <ScrollView>
                         {
                             limitData.limit_list?.data ? (
@@ -103,15 +109,17 @@ const home = () => {
                                     </Pressable>
                                 ))
                             ) : (
-                                <Text className='text-center'>
+                                <Text className='text-center' style={{ color: Th.color }} >
                                     {t('no_limit')}
                                 </Text>
                             )
                         }
                     </ScrollView>
                 </View>
-            </Modal>
-            <Pressable onPress={() => setModal(true)} className={'w-full'}>
+            </Modal> */}
+            <Pressable onPress={() => {
+                setModalVisible(true)
+            }} className={'w-full'}>
                 {
                     chooseCard ?
                         <View className={'w-full justify-center items-center overflow-visible h-22'}>
@@ -125,7 +133,7 @@ const home = () => {
                                 </View>
                                 <View className='flex flex-row items-center justify-center' >
                                     <Ionicons name="information-outline" size={25} color={'white'} />
-                                    <Text className='text-white text-19 ml-1'>
+                                    <Text className='text-19 ml-1 text-white' >
                                         {t('choose_limit')}
                                     </Text>
                                 </View>
@@ -137,7 +145,7 @@ const home = () => {
             <View className={' justify-start items-start w-11/12 flex-1 py-2'}>
                 <View className={' flex flex-row'}>
                     <View>
-                        <Text className={'text-black text-17 font-bold'}> {t('previously_scanned')} </Text>
+                        <Text className={'text-17 font-bold'} style={{ color: Th.color }} > {t('previously_scanned')} </Text>
                     </View>
                     <View className={'mt-1 -ml-2 flex flex-row'}>
                         <Entypo name={'dot-single'} size={16} color={'gray'} />
@@ -145,8 +153,8 @@ const home = () => {
                     </View>
                 </View>
                 {limitData.products?.length == 0 &&
-                    <View className={'mr-3 mt-1'}>
-                        <Text className={'text-gray text-15 text-center'}>Scan the QR code to add the product to the list</Text>
+                    <View className={'mr-3 mt-1 flex-1 items-center justify-center '}>
+                        <Text className={'text-gray text-15 text-center'}> {t('scan_to_add')} </Text>
                     </View>
                 }
                 {limitData.products?.length > 0 ?
@@ -164,7 +172,7 @@ const home = () => {
                     </ScrollView>
                     : (
                         <View className='items-center justify-center flex-1 flex-col w-full'>
-                            <Text>
+                            <Text style={{ color: Th.color }} >
                                 {t('no_data')}
                             </Text>
                         </View>

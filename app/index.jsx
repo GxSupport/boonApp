@@ -1,21 +1,25 @@
 import { View, StyleSheet, Text } from "react-native";
 import { useEffect, useState } from "react";
-import { router, useNavigation } from "expo-router";
+import { Redirect, router, useNavigation } from "expo-router";
 import * as SplashScreen from 'expo-splash-screen';
 import { useFonts } from "expo-font";
 import { useDispatch, useSelector } from "react-redux";
 import { getToken } from "../store/Slicers/LoginSlicer";
+import { getTheme } from "../store/Slicers/SwitchState";
+
 export default function Index() {
   const { access_token } = useSelector(state => state.LoginSlicer)
   const [progress, setProgress] = useState(0);
   const navigations = useNavigation()
   const dispatch = useDispatch()
+
   useEffect(() => {
     navigations.setOptions({
       title: "",
       headerShown: false,
     })
     dispatch(getToken())
+    dispatch(getTheme());
     const interval = setInterval(() => {
       setProgress((oldProgress) => {
         if (oldProgress === 100) {
