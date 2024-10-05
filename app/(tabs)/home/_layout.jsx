@@ -15,7 +15,6 @@ export default () => {
                 headerTitle: t('home'),
                 headerTitleStyle: { fontSize: 19 },
                 headerTintColor: Th.color
-
             }} />
         </Stack>
     )

@@ -55,7 +55,6 @@ function AddCard() {
         method: 'POST',
         data: inputValue
       })
-      console.log(res);
       showMessage({
         message: "Successfully",
         type: "success",

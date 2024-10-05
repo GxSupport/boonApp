@@ -14,6 +14,7 @@ export const setToken = createAsyncThunk(
     return token;
   }
 )
+
 export const removeToken = createAsyncThunk(
   "token/removeToken",
   async () => {
@@ -28,6 +29,7 @@ const LoginSlicer = createSlice({
     access_token: null,
     logOut_load: false,
     error: null,
+ 
   },
   extraReducers: (builder) => {
     builder.addCase(getToken.fulfilled, (state, { payload }) => {
@@ -36,7 +38,7 @@ const LoginSlicer = createSlice({
     builder.addCase(setToken.fulfilled, (state, { payload }) => {
       state.access_token = payload
     })
-    builder.addCase(removeToken.pending, (state, { payload }) => {
+    builder.addCase(removeToken.pending, (state) => {
       state.logOut_load = true
     })
     builder.addCase(removeToken.fulfilled, (state, { payload }) => {

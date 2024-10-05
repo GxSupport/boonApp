@@ -1,14 +1,15 @@
 import { View, StyleSheet, Text } from "react-native";
 import { useEffect, useState } from "react";
-import { Redirect, router, useNavigation } from "expo-router";
+import { router, useNavigation } from "expo-router";
 import * as SplashScreen from 'expo-splash-screen';
 import { useFonts } from "expo-font";
 import { useDispatch, useSelector } from "react-redux";
 import { getToken } from "../store/Slicers/LoginSlicer";
-import { getTheme } from "../store/Slicers/SwitchState";
+import { getPermission, getTheme } from "../store/Slicers/SwitchState";
 
 export default function Index() {
   const { access_token } = useSelector(state => state.LoginSlicer)
+  const { isPermission } = useSelector(state => state.SwitchState)
   const [progress, setProgress] = useState(0);
   const navigations = useNavigation()
   const dispatch = useDispatch()
@@ -20,6 +21,7 @@ export default function Index() {
     })
     dispatch(getToken())
     dispatch(getTheme());
+    dispatch(getPermission());
     const interval = setInterval(() => {
       setProgress((oldProgress) => {
         if (oldProgress === 100) {
@@ -31,12 +33,17 @@ export default function Index() {
     });
     return () => clearInterval(interval);
   }, []);
-  useEffect(() => {
+  useEffect(() => {    
     if (progress === 100) {
-      if (!access_token) {
-        router.replace('/login');
+      if (access_token) {
+        if (isPermission) {
+          router.replace('/home');
+        }
+        else {
+          router.replace('offert/Offert');
+        }
       } else {
-        router.replace('/home');
+        router.replace('/login');
       }
     }
   }, [progress, access_token, router]);

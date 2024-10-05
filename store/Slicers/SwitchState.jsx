@@ -1,5 +1,5 @@
-import { createAsyncThunk, createSlice, Tuple } from "@reduxjs/toolkit";
-import { getItem, setItem } from "../../utils/AsyncStorage";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { getItem, removeItem, setItem } from "../../utils/AsyncStorage";
 import i18n from "../../utils/i18n";
 
 export const toggleTheme = createAsyncThunk(
@@ -27,11 +27,34 @@ export const changeLangue = createAsyncThunk(
   }
 );
 
+
 export const getLanguage = createAsyncThunk(
   'lang/getLang',
   async () => {
     const lang = await getItem('lang');
     return lang || 'uz';
+  }
+);
+
+export const getPermission = createAsyncThunk(
+  'permission/get',
+  async () => {
+    const permission = await getItem('permission');
+    return permission;
+  }
+);
+export const setPermission = createAsyncThunk(
+  'permission/set',
+  async (permission) => {
+    await setItem('permission', permission);
+    return permission;
+  }
+);
+export const removePermisson = createAsyncThunk(
+  'permission/remove',
+  async (key) => {
+    const permission = await removeItem(key);
+    return permission;
   }
 );
 
@@ -41,7 +64,9 @@ export const SwitchState = createSlice({
     theme: "light",
     language: 'uz',
     langLoad: false,
-    themeLoad: false
+    themeLoad: false,
+    isPermission: false,
+    permission_load: false,
   },
   extraReducers: (builder) => {
     // function of language 
@@ -73,6 +98,25 @@ export const SwitchState = createSlice({
     builder.addCase(getLanguage.fulfilled, (state, { payload }) => {
       state.language = payload;
       state.langLoad = false
+    })
+    // permission function 
+    builder.addCase(getPermission.fulfilled, (state, { payload }) => {
+      state.isPermission = payload;
+      state.permission_load = false
+    })
+    builder.addCase(getPermission.pending, (state) => {
+      state.permission_load = true
+    })
+    builder.addCase(setPermission.fulfilled, (state, { payload }) => {
+      state.isPermission = payload;
+      state.permission_load = false
+    })
+    builder.addCase(setPermission.pending, (state) => {
+      state.permission_load = true
+    })
+    builder.addCase(removePermisson.fulfilled, (state) => {
+      state.isPermission = false
+      state.permission_load = false
     })
   }
 })

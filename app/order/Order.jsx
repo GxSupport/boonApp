@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import { Image, ScrollView, TextInput, RadioNodeList, Text, View, Pressable } from 'react-native'
+import { Image, ScrollView, TextInput, Text, View, Pressable } from 'react-native'
 import Button from '../../components/Button'
 import { formatSum } from '../../utils/formatSum'
 import { useTranslation } from 'react-i18next'

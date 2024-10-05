@@ -30,6 +30,7 @@ export const Layout = () => {
 	return (
 		<Stack>
 			<Stack.Screen name="login" options={{ headerShown: false }} />
+			<Stack.Screen name="offert/Offert" options={{ headerShown: false }}  />
 			<Stack.Screen name="(tabs)" options={{ headerShown: false }} />
 			<Stack.Screen name="product/[id]" options={{
 				headerBackTitleVisible: false,

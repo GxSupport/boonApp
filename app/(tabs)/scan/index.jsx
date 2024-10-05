@@ -8,6 +8,7 @@ import { router } from "expo-router";
 import FlashMessage, { showMessage } from "react-native-flash-message";
 import { useTranslation } from "react-i18next";
 import { Linking } from "react-native";
+import api from "../../../api/api";
 
 export default function Scan() {
     const { t } = useTranslation()
@@ -16,7 +17,30 @@ export default function Scan() {
     const appState = useRef(AppState.currentState)
     const successCode = async (barcode) => {
         if (barcode.data && extractDynamicPart(barcode.data)) {
-            router.push(`/product/${extractDynamicPart(barcode.data)}==true`)
+            router.push(`/product/${extractDynamicPart(barcode.data)}`)
+
+            // try {
+            //     const result = await api({
+            //         url: `application/product_parse`, method: "POST",
+            //         data: {
+            //             product_url: barcode.data,
+            //             task_id: 20
+            //         }
+            //     })
+            //     if (result.status === 200) {
+            //         showMessage({
+            //             message: t('add_product'),
+            //             type: "success",
+            //             duration: 3000,
+            //             style: { top: 30 }
+            //         });
+            //         // router.push(`/product/${extractDynamicPart(barcode.data)}`)
+            //         router.replace('home')
+            //     }
+
+            // } catch (error) {
+            //     console.log(error);
+            // }
         }
         else {
             showMessage({

@@ -10,10 +10,12 @@ import { URL } from "../api/const";
 import FlashMessage, { showMessage } from "react-native-flash-message";
 import { useTranslation } from "react-i18next";
 import { setToken } from "../store/Slicers/LoginSlicer";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import DialogComponent from "../components/Dialog";
 import themeContext from "../theme/themeContext";
+import { getPermission } from "../store/Slicers/SwitchState";
 const Login = () => {
+    const { isPermission } = useSelector(state => state.SwitchState)
     const [errors, setErrors] = useState({});
     const [isFormValid, setIsFormValid] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -35,6 +37,9 @@ const Login = () => {
         });
 
     }
+    useEffect(() => {
+        dispatch(getPermission())
+    }, [])
     const login = async () => {
         validateForm()
         setSubmitted(true)
@@ -47,7 +52,12 @@ const Login = () => {
                 })
                 if (res.status === 200) {
                     dispatch(setToken(res.data?.access_token))
-                    router.replace('/home')
+                    if (isPermission) {
+                        router.replace('/home');
+                    }
+                    else {
+                        router.replace('offert/Offert');
+                    }
                 }
             }
             catch (error) {

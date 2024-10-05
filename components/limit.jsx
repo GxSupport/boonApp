@@ -18,15 +18,18 @@ const Limit = ({ limit, setLimit, title = null, index = 0 }) => {
             </View>
             <View className={'items-center pt-3 flex-row justify-center'}>
                 <View className={'p-1'}>
-                    <Entypo className={'static'} name={'wallet'} size={14} color={'white'} />
+                    <Entypo className={'static'} name={'wallet'} size={17} color={'white'} />
                 </View>
                 <View className='flex flex-row justify-center items-center gap-2' >
-                    <Text className={'text-13 static text-white'}> {t('limit_amount')} </Text>
-                    <Text className={'text-19 text-white font-bold'}> {title} </Text>
+                    <Text className={'text-17 static text-white'}> {t('limit_amount')} </Text>
                 </View>
             </View>
-            <View className={'items-center pt-2 pb-3'}>
-                <Text className={'text-19 text-white font-bold'}>{formatSum(limit)} {t('Uzs')} </Text>
+            <View className={'items-center pt-2 pb-3 flex-row justify-center'}>
+                <Text className={'text-19 text-white font-bold'}>{formatSum(limit)} </Text>
+                <Text className={'text-white font-bold'} >
+                    {t('Uzs')}
+                </Text>
+                <Text className={'text-19 text-center text-white font-bold'}>  {title} {t('month_text')}</Text>
             </View>
         </View>
     )

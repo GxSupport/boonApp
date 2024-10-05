@@ -84,7 +84,6 @@ const Decor = () => {
 									key={item.id}
 									onPress={() => {
 										dispatch(toggleTheme(item.name))
-										console.log(Th);
 									}}
 								>
 									<View className={`border  rounded-md overflow-hidden ${item.name === theme ? 'border-blue-400' : 'border-transparent'} `} >

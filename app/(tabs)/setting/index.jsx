@@ -1,4 +1,5 @@
-import { Alert, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useContext, useState } from "react";
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import formatPhone from "../../../utils/formatPhone";
 import { Entypo, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -6,13 +7,12 @@ import { router, useNavigation } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { removeToken } from "../../../store/Slicers/LoginSlicer";
-import { useContext, useState } from "react";
 import { CommonActions } from '@react-navigation/native';
 import Loading from "../../../components/Loading";
 import themeContext from "../../../theme/themeContext";
 import Button from "../../../components/Button";
-import Dialog from "react-native-dialog";
 import DialogComponent from "../../../components/Dialog";
+import { removePermisson } from "../../../store/Slicers/SwitchState";
 
 const SettingPage = () => {
     const { logOut_load } = useSelector(state => state.LoginSlicer)
@@ -28,6 +28,7 @@ const SettingPage = () => {
     const dispatch = useDispatch()
     const logOut = () => {
         dispatch(removeToken());
+        dispatch(removePermisson('permission'))
         router.push('/login')
         navigation.dispatch(
             CommonActions.reset({

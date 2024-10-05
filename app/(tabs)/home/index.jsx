@@ -1,4 +1,4 @@
-import { Alert, BackHandler, FlatList, Platform, Pressable, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, View } from "react-native";
+import { Alert, BackHandler, FlatList, Platform, Pressable, SafeAreaView, Modal, ScrollView, StatusBar, StyleSheet, Text, View } from "react-native";
 import { Entypo, Ionicons } from "@expo/vector-icons";
 import { useCallback, useContext, useEffect, useState } from "react";
 import ItemProduct from "../../../components/itemProduct";
@@ -6,28 +6,24 @@ import Limit from "../../../components/limit";
 import ProgressLimit from "../../../components/progressLimit";
 import Loading from "../../../components/Loading";
 import { useDispatch, useSelector } from "react-redux";
-import { getLimitData } from "../../../store/Slicers/Products";
 import { useTranslation } from "react-i18next";
 import { useFocusEffect, useNavigation } from "expo-router";
 import themeContext from "../../../theme/themeContext";
 import DialogComponent from "../../../components/Dialog";
-import Modal from "../../../components/Modal";
-
+import { getLimitData, handleChooseCard } from "../../../store/Slicers/Products";
+// import Offert from "../../offert/Offert";
 const home = () => {
     const platform = Platform.OS;
     const dispatch = useDispatch()
     const { t } = useTranslation()
     const navigation = useNavigation();
-    const [isModal, setModal] = useState(false);
-    const [chooseCard, setChooseCard] = useState(null);
-    const { limitData, isLoading } = useSelector(state => state.ProductSlicer)
+    const { limitData, application, isLoading, chooseCardState } = useSelector(state => state.ProductSlicer)
     const [quit, setQuit] = useState(false)
     const [modalVisible, setModalVisible] = useState(false);
-    const [isCard, setCard] = useState(false)
     const Th = useContext(themeContext)
     useEffect(() => {
         dispatch(getLimitData())
-    }, [])
+    }, []);
 
     const hanldeChooseCard = (prop) => {
         Alert.alert(t('alertHeading'), t('alertQuestion'), [
@@ -37,9 +33,8 @@ const home = () => {
             },
             {
                 text: 'OK', onPress: () => {
-                    const findItem = limitData?.limit_list?.data.find(c => c.guidFinProduct === prop)
-                    setChooseCard(findItem)
-                    setModal(false)
+                    dispatch(handleChooseCard(prop))
+                    setModalVisible(false)
                 }
             },
         ]);
@@ -47,8 +42,8 @@ const home = () => {
 
     useEffect(() => {
         const backAction = () => {
-            if (isModal) {
-                setModal(false);
+            if (modalVisible) {
+                setModalVisible(false);
                 return true;
             }
             return false;
@@ -58,7 +53,7 @@ const home = () => {
             backAction
         );
         return () => backHandler.remove();
-    }, [isModal]);
+    }, [modalVisible]);
     useFocusEffect(
         useCallback(() => {
             const backAction = () => {
@@ -76,6 +71,7 @@ const home = () => {
 
     return (
         <SafeAreaView className={'h-full pt-3 items-center'} style={{ backgroundColor: Th.backgroundColor }}>
+            {/* <Offert /> */}
             <DialogComponent isAlert={quit} setAlert={setQuit} description={t('closeQuestion')} title={t('close_text')}
                 handle={BackHandler.exitApp}
                 handleTitle={t('close')}
@@ -84,14 +80,14 @@ const home = () => {
                 backgroundColor={Th.black_bg_Color}
                 barStyle={Th.barStyle}
             />
-            <Modal visible={modalVisible} onClose={() => setModalVisible(false)} />
-            {/* <Modal
+            {/* <Modal visible={modalVisible} onClose={() => setModalVisible(false)} /> */}
+            <Modal
                 animationType="slide"
-                visible={isModal}
-                onRequestClose={() => setModal(false)}
+                visible={modalVisible}
+                onRequestClose={() => setModalVisible(false)}
                 style={{ backgroundColor: Th.backgroundColor }}
             >
-                <Pressable onPress={() => setModal(false)} style={styles.closeBox} >
+                <Pressable onPress={() => setModalVisible(false)} style={styles.closeBox} >
                     <Ionicons name="close" style={styles.closebtn} />
                 </Pressable>
                 <View>
@@ -116,48 +112,31 @@ const home = () => {
                         }
                     </ScrollView>
                 </View>
-            </Modal> */}
+            </Modal>
             <Pressable onPress={() => {
                 setModalVisible(true)
             }} className={'w-full'}>
-                {
-                    chooseCard ?
-                        <View className={'w-full justify-center items-center overflow-visible h-22'}>
-                            <Limit limit={chooseCard?.limit} title={chooseCard?.month_text} />
-                            <ProgressLimit used={15489} limit={chooseCard?.limit} page={'home'} />
-                        </View>
-                        :
-                        <View className="w-full justify-center items-center overflow-visible h-22">
-                            <View className={'w-11/12 z-10 rounded-2xl m-auto justify-center items-center overflow-hidden h-20 bg-blue-500'}>
-                                <View className={`absolute w-40 h-40 rounded-full left-1 -top-4 -mt-16 -ml-24 bg-blue-400 `} >
-                                </View>
-                                <View className='flex flex-row items-center justify-center' >
-                                    <Ionicons name="information-outline" size={25} color={'white'} />
-                                    <Text className='text-19 ml-1 text-white' >
-                                        {t('choose_limit')}
-                                    </Text>
-                                </View>
-                            </View>
-                            <ProgressLimit used={0} limit={0} page={'home'} />
-                        </View>
-                }
+                <View className={'w-full justify-center items-center overflow-visible h-22'}>
+                    <Limit limit={chooseCardState?.limit} title={chooseCardState?.month} />
+                    <ProgressLimit used={application?.products.reduce((a, b) => a + parseFloat(b.sale_price), 0)} limit={chooseCardState?.limit} page={'home'} />
+                </View>
             </Pressable>
             <View className={' justify-start items-start w-11/12 flex-1 py-2'}>
                 <View className={' flex flex-row'}>
                     <View>
-                        <Text className={'text-17 font-bold'} style={{ color: Th.color }} > {t('previously_scanned')} </Text>
+                        <Text className={'text-17 font-bold'} style={{ color: Th.color }} > {t('the_chosen_ones')} </Text>
                     </View>
                     <View className={'mt-1 -ml-2 flex flex-row'}>
                         <Entypo name={'dot-single'} size={16} color={'gray'} />
                         <Text className={'text-gray -mt-0.5 -ml-1  text-13'}>{limitData.products?.length} {t('goods')} </Text>
                     </View>
                 </View>
-                {limitData.products?.length == 0 &&
+                {limitData?.products?.length == 0 &&
                     <View className={'mr-3 mt-1 flex-1 items-center justify-center '}>
                         <Text className={'text-gray text-15 text-center'}> {t('scan_to_add')} </Text>
                     </View>
                 }
-                {limitData.products?.length > 0 ?
+                {limitData?.products?.length > 0 ?
                     <ScrollView>
                         <View className={platform === 'ios' ? 'w-full' : ' w-full h-full'}>
                             <FlatList
