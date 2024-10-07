@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, BackHandler, StatusBar } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, BackHandler, StatusBar } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { TextInputMask } from "react-native-masked-text";
 import { useCallback, useContext, useEffect, useState } from "react";
@@ -10,12 +10,10 @@ import { URL } from "../api/const";
 import FlashMessage, { showMessage } from "react-native-flash-message";
 import { useTranslation } from "react-i18next";
 import { setToken } from "../store/Slicers/LoginSlicer";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import DialogComponent from "../components/Dialog";
 import themeContext from "../theme/themeContext";
-import { getPermission } from "../store/Slicers/SwitchState";
 const Login = () => {
-    const { isPermission } = useSelector(state => state.SwitchState)
     const [errors, setErrors] = useState({});
     const [isFormValid, setIsFormValid] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -37,9 +35,7 @@ const Login = () => {
         });
 
     }
-    useEffect(() => {
-        dispatch(getPermission())
-    }, [])
+    useEffect(() => { }, [])
     const login = async () => {
         validateForm()
         setSubmitted(true)
@@ -52,12 +48,7 @@ const Login = () => {
                 })
                 if (res.status === 200) {
                     dispatch(setToken(res.data?.access_token))
-                    if (isPermission) {
-                        router.replace('/home');
-                    }
-                    else {
-                        router.replace('offert/Offert');
-                    }
+                    router.replace('/home');
                 }
             }
             catch (error) {

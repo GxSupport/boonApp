@@ -5,7 +5,7 @@ const Theme = {
     black_bg_Color:"#202020",
     gray_color:"white",
     tab_icon_color:"white",
-    barStyle:"light-content"
+    barStyle:"light-content",
   },
   light: {
     color: 'black',
@@ -13,7 +13,7 @@ const Theme = {
     black_bg_Color:"white",
     tab_icon_color:"gray",
     backgroundColor: "#F7F6FB",
-    barStyle:"dark-content"
+    barStyle:"dark-content",
   }
 }
 

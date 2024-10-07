@@ -13,24 +13,10 @@ const Payments = () => {
     const bg_backg = require("../../../assets/cards/card_background.png")
     const Th = useContext(themeContext)
 
-    const cardImg = [
-        {
-            title: "Humo",
-            img: require('../../../assets/cards/HUMO.jpg')
-        },
-        {
-            title: "MasterCard",
-            img: require('../../../assets/cards/Master.png')
-        },
-        {
-            title: "Uzcard",
-            img: require('../../../assets/cards/Uzcard.png')
-        },
-        {
-            title: "JCB",
-            img: require('../../../assets/cards/JCB.jpg')
-        },
-    ]
+    const cardImg = {
+        title: "Uzcard",
+        img: require('../../../assets/cards/Uzcard.png')
+    }
 
     useEffect(() => {
         navigation.setOptions({
@@ -60,10 +46,7 @@ const Payments = () => {
                                     <Text className='text-[#EBEBEB]  font-semibold'>{card.validThru}</Text>
                                     <View className='w-11 h-11'>
                                         {
-                                            cardImg.map(({ title, img }, index) => (
-                                                card.cardType === title &&
-                                                <Image key={index} source={img} className='w-full h-full' resizeMode="contain" />
-                                            ))
+                                            <Image source={cardImg.img} className='w-full h-full' resizeMode="contain" />
                                         }
                                     </View>
                                 </View>

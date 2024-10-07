@@ -12,7 +12,6 @@ import Loading from "../../../components/Loading";
 import themeContext from "../../../theme/themeContext";
 import Button from "../../../components/Button";
 import DialogComponent from "../../../components/Dialog";
-import { removePermisson } from "../../../store/Slicers/SwitchState";
 
 const SettingPage = () => {
     const { logOut_load } = useSelector(state => state.LoginSlicer)
@@ -28,7 +27,6 @@ const SettingPage = () => {
     const dispatch = useDispatch()
     const logOut = () => {
         dispatch(removeToken());
-        dispatch(removePermisson('permission'))
         router.push('/login')
         navigation.dispatch(
             CommonActions.reset({

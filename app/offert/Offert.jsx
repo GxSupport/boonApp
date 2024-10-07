@@ -3,9 +3,10 @@ import Pdf from "react-native-pdf";
 import { useState } from 'react'
 import { useTranslation } from "react-i18next";
 import { router } from "expo-router";
-import { useDispatch, useSelector } from "react-redux";
-import { removePermisson, setPermission } from "../../store/Slicers/SwitchState";
+import { useDispatch } from "react-redux";
 import { removeToken } from "../../store/Slicers/LoginSlicer";
+import api from "../../api/api";
+import { SkypeIndicator } from "react-native-indicators";
 
 const source = {
   uri: "http://tehnoboon.uz/offer.pdf",
@@ -13,8 +14,7 @@ const source = {
 };
 
 export default function Offert() {
-  const { isPermission } = useSelector(state => state.SwitchState)
-
+  const [permission_load, setPermission_load] = useState(false)
   const { width, height } = useWindowDimensions();
   const { t } = useTranslation()
   const [numberOfLines, setNumberOfPage] = useState(null)
@@ -22,18 +22,30 @@ export default function Offert() {
   const dispatch = useDispatch()
   const handleCancel = async () => {
     dispatch(removeToken());
-    dispatch(removePermisson('permission'))
     router.replace('/login')
   }
-
+  const handlePermission = async () => {
+    setPermission_load(true);
+    try {
+      const res = await api('/client/accept', { method: 'POST' })
+      if (res.status === 200) {
+        router.replace('/home');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    finally {
+      setPermission_load(false);
+    }
+  }
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <Pdf
         source={source}
-        onLoadComplete={(numberOfPages, filePath) => {
+        onLoadComplete={(numberOfPages) => {
           setNumberOfPage(numberOfPages)
         }}
-        onPageChanged={(page, numberOfPages) => {
+        onPageChanged={(page) => {
           if (!isFinish) {
             setIsFinish(page === numberOfLines)
           }
@@ -47,15 +59,16 @@ export default function Offert() {
       {
         isFinish ? (
           <View style={styles.button_box}>
-            <TouchableOpacity
-              onPress={() => {
-                dispatch(setPermission(true));
-                router.replace('/home');
-              }
-              }
-            >
-              <Text style={styles.text_color} > {t('give_permission')} </Text>
-            </TouchableOpacity>
+            {permission_load &&
+              <View className={'animate-spin bg-btn-primary h-11 mt-5 rounded-md items-center justify-center'}>
+                <SkypeIndicator color={'white'} size={30} />
+              </View>
+            }
+            {!permission_load &&
+              <TouchableOpacity onPress={handlePermission}>
+                 <Text style={styles.text_color}> {t('give_permission')} </Text>
+              </TouchableOpacity>
+            }
             <TouchableOpacity
               onPress={handleCancel}
             >
@@ -80,7 +93,7 @@ const styles = StyleSheet.create({
     color: 'white',
     paddingHorizontal: 10,
     paddingVertical: 12,
-    borderRadius: 7,
+    borderRadius: 5,
     textAlign: 'center',
     backgroundColor: "#007FFF"
   },

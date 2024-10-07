@@ -77,7 +77,7 @@ const home = () => {
                 handleTitle={t('close')}
             />
             <StatusBar
-                backgroundColor={Th.black_bg_Color}
+                backgroundColor={Th.backgroundColor}
                 barStyle={Th.barStyle}
             />
             {/* <Modal visible={modalVisible} onClose={() => setModalVisible(false)} /> */}

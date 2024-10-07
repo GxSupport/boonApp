@@ -4,16 +4,29 @@ import { router, useNavigation } from "expo-router";
 import * as SplashScreen from 'expo-splash-screen';
 import { useFonts } from "expo-font";
 import { useDispatch, useSelector } from "react-redux";
-import { getToken } from "../store/Slicers/LoginSlicer";
-import { getPermission, getTheme } from "../store/Slicers/SwitchState";
+import {  getToken } from "../store/Slicers/LoginSlicer";
+import { getTheme } from "../store/Slicers/SwitchState";
+import api from "../api/api";
 
 export default function Index() {
   const { access_token } = useSelector(state => state.LoginSlicer)
-  const { isPermission } = useSelector(state => state.SwitchState)
   const [progress, setProgress] = useState(0);
   const navigations = useNavigation()
   const dispatch = useDispatch()
 
+  const checkPermission = async () => {
+    try {
+      const res = await api('/client/get')
+      if (res.status === 200) {
+        router.replace('/home');
+      }
+      else {
+        router.replace('offert/Offert');
+      }
+    } catch (error) {
+      router.replace('/login');
+    }
+  }
   useEffect(() => {
     navigations.setOptions({
       title: "",
@@ -21,7 +34,6 @@ export default function Index() {
     })
     dispatch(getToken())
     dispatch(getTheme());
-    dispatch(getPermission());
     const interval = setInterval(() => {
       setProgress((oldProgress) => {
         if (oldProgress === 100) {
@@ -33,15 +45,10 @@ export default function Index() {
     });
     return () => clearInterval(interval);
   }, []);
-  useEffect(() => {    
+  useEffect(() => {
     if (progress === 100) {
       if (access_token) {
-        if (isPermission) {
-          router.replace('/home');
-        }
-        else {
-          router.replace('offert/Offert');
-        }
+        checkPermission()
       } else {
         router.replace('/login');
       }

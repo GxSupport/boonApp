@@ -36,28 +36,6 @@ export const getLanguage = createAsyncThunk(
   }
 );
 
-export const getPermission = createAsyncThunk(
-  'permission/get',
-  async () => {
-    const permission = await getItem('permission');
-    return permission;
-  }
-);
-export const setPermission = createAsyncThunk(
-  'permission/set',
-  async (permission) => {
-    await setItem('permission', permission);
-    return permission;
-  }
-);
-export const removePermisson = createAsyncThunk(
-  'permission/remove',
-  async (key) => {
-    const permission = await removeItem(key);
-    return permission;
-  }
-);
-
 export const SwitchState = createSlice({
   name: "switchState",
   initialState: {
@@ -65,8 +43,6 @@ export const SwitchState = createSlice({
     language: 'uz',
     langLoad: false,
     themeLoad: false,
-    isPermission: false,
-    permission_load: false,
   },
   extraReducers: (builder) => {
     // function of language 
@@ -98,25 +74,6 @@ export const SwitchState = createSlice({
     builder.addCase(getLanguage.fulfilled, (state, { payload }) => {
       state.language = payload;
       state.langLoad = false
-    })
-    // permission function 
-    builder.addCase(getPermission.fulfilled, (state, { payload }) => {
-      state.isPermission = payload;
-      state.permission_load = false
-    })
-    builder.addCase(getPermission.pending, (state) => {
-      state.permission_load = true
-    })
-    builder.addCase(setPermission.fulfilled, (state, { payload }) => {
-      state.isPermission = payload;
-      state.permission_load = false
-    })
-    builder.addCase(setPermission.pending, (state) => {
-      state.permission_load = true
-    })
-    builder.addCase(removePermisson.fulfilled, (state) => {
-      state.isPermission = false
-      state.permission_load = false
     })
   }
 })

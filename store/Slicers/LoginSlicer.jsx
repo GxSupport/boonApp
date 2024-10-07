@@ -22,6 +22,7 @@ export const removeToken = createAsyncThunk(
     return null;
   }
 )
+
 const LoginSlicer = createSlice({
   name: "user",
   initialState: {
@@ -29,7 +30,8 @@ const LoginSlicer = createSlice({
     access_token: null,
     logOut_load: false,
     error: null,
- 
+    isPermission: false,
+    load_permission: false
   },
   extraReducers: (builder) => {
     builder.addCase(getToken.fulfilled, (state, { payload }) => {
@@ -47,6 +49,5 @@ const LoginSlicer = createSlice({
     })
   }
 })
-
 
 export default LoginSlicer.reducer;
