@@ -1,6 +1,6 @@
-import { View, Text, Button, StyleSheet, AppState, ActivityIndicator } from "react-native";
+import { View, Text, Button, StyleSheet, AppState, ActivityIndicator, StatusBar } from "react-native";
 import { Camera, CameraView, useCameraPermissions } from "expo-camera";
-import React, { useEffect, useRef } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import { requestCameraPermissionsAsync } from "expo-camera/legacy";
 import { SafeAreaView } from "react-native-safe-area-context";
 import extractDynamicPart from "../../../utils/extractDynamicPart";
@@ -9,12 +9,15 @@ import FlashMessage, { showMessage } from "react-native-flash-message";
 import { useTranslation } from "react-i18next";
 import { Linking } from "react-native";
 import api from "../../../api/api";
+import themeContext from "../../../theme/themeContext";
 
 export default function Scan() {
     const { t } = useTranslation()
     const [hasPermission, setHasPermission] = useCameraPermissions()
     const qrLock = useRef(false)
     const appState = useRef(AppState.currentState)
+    const Th = useContext(themeContext)
+
     const successCode = async (barcode) => {
         if (barcode.data && extractDynamicPart(barcode.data)) {
             router.push(`/product/${extractDynamicPart(barcode.data)}`)

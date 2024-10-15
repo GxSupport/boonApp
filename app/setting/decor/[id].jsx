@@ -50,7 +50,7 @@ const Decor = () => {
 		},
 	]
 	return (
-		<View className={`flex justify-start h-full items-center bg-bg-default`} style={{backgroundColor: Th.backgroundColor}} >
+		<View className={`flex justify-start h-full items-center bg-bg-default`} style={{ backgroundColor: Th.backgroundColor }} >
 			<Loading loading={langLoad || themeLoad} />
 			<View className={'mt-7 w-11/12'}>
 				<View>

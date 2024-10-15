@@ -13,6 +13,7 @@ module.exports = {
         'blue-300-1': '#00B7FF99',
         'bg-icon': '#D6EEFF',
         'bg-logout': '#F8EAEF',
+        'bg-alpha': 'rgba(0,0,0,0.5)'
       },
       fontFamily: {
         'sans': ['Inter', 'sans-serif'],

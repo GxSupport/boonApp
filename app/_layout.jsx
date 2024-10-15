@@ -81,7 +81,6 @@ export const Layout = () => {
 				headerTitle: t('an_order'),
 				headerTitleAlign: 'center',
 				headerTintColor: Th.color
-
 			}} />
 		</Stack>
 	)

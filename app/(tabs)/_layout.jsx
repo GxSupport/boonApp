@@ -18,6 +18,7 @@ export default () => {
 				shadowOpacity: 0,
 				shadowRadius: 0,
 				elevation: 0,
+				zIndex: 10
 			}
 		}}
 	>
@@ -39,7 +40,7 @@ export default () => {
 				alignItems: 'center'
 			},
 		}} />
-		<Tabs.Screen name="basket" options={{
+		{/* <Tabs.Screen name="basket" options={{
 			headerShown: false,
 			tabBarIcon: ({ focused, color }) => (
 				<FontAwesome6
@@ -55,16 +56,16 @@ export default () => {
 				height: 60,
 				alignItems: 'center'
 			},
-		}} />
+		}} /> */}
 		<Tabs.Screen name="scan" options={{
 			headerShown: false,
-			tabBarButton: (props) => (
-				<TouchableOpacity onPress={props.onPress} className={'pt-0.5'}>
-					<View className={'rounded-full bg-btn-primary p-3'}>
-						<MaterialCommunityIcons name={'line-scan'} size={24} color={'white'} />
-					</View>
-				</TouchableOpacity>
-			),
+			tabBarInactiveTintColor: Th.tab_icon_color,
+			tabBarStyle: {
+				backgroundColor: Th.black_bg_Color,
+				height: 60,
+				alignItems: 'center'
+			},
+			tabBarIcon: ({ focused, color }) => <MaterialCommunityIcons name="line-scan" size={22} color={focused ? color : Th.tab_icon_color} />,
 			tabBarShowLabel: false,
 		}} />
 		<Tabs.Screen name='history' options={{
