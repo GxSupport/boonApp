@@ -41,9 +41,6 @@ const home = () => {
 		]);
 	}
 
-	console.log(limitData?.limit_list?.data);
-
-
 	useEffect(() => {
 		const backAction = () => {
 			if (modalVisible) {
@@ -83,16 +80,14 @@ const home = () => {
 				barStyle={Th.barStyle}
 			/>
 			{limitData?.limit_list?.data &&
-				<ModalComponent visible={modalVisible} setState={setModalVisible} data={limitData?.limit_list?.data}/>
+				<ModalComponent visible={modalVisible} setState={setModalVisible} data={limitData?.limit_list?.data} _id={chooseCardState?.guidFinProduct} />
 			}
-			<Pressable onPress={() => {
-				setModalVisible(true)
-			}} className={'w-full'}>
+			<View className={'w-full'}>
 				<View className={'w-full justify-center items-center overflow-visible h-22'}>
-					<Limit limit={chooseCardState?.limit} title={chooseCardState?.month} />
+					<Limit limit={chooseCardState?.limit} title={chooseCardState?.month} setState={setModalVisible}  />
 					<ProgressLimit used={application?.products.reduce((a, b) => a + parseFloat(b.sale_price), 0)} limit={chooseCardState?.limit} page={'home'} />
 				</View>
-			</Pressable>
+			</View>
 			<View className={' justify-start items-start w-11/12 flex-1 py-2'}>
 				<View className={' flex flex-row'}>
 					<View>

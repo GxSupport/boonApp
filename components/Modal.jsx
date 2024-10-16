@@ -1,99 +1,90 @@
-import { StyleSheet, Text, TouchableOpacity, View, Modal, Pressable, ScrollView } from "react-native";
-import React, { useState } from "react";
-import { StatusBar } from "expo-status-bar";
+import React, { useContext, useEffect } from "react";
 import { formatSum } from "../utils/formatSum";
 import { Ionicons } from "@expo/vector-icons";
+import { Pressable, StyleSheet, Text, View, ScrollView } from "react-native";
+import { Modal } from "react-native";
+import { TouchableOpacity } from "react-native";
+import themeContext from "../theme/themeContext";
 
-export default function ModalComponent({ visible, setState, data }) {
-  const [showIndex, setShowIndex] = useState(0);
-  const [quit, setQuit] = useState(1);
+export default function ModalComponent({ visible, setState, data, _id }) {
+  const [showIndex, setShowIndex] = React.useState(null);
+  const Th = useContext(themeContext)
+
+  useEffect(() => {
+    setShowIndex(_id)
+  }, [_id])
+  const closeMOdal = () => {
+    setState(false)
+    setShowIndex(_id)
+  }
   return (
-    <View style={styles.container}>
-      <StatusBar style="auto" />
-      <Modal
-        visible={visible}
-        statusBarTranslucent={true}
-        transparent={true}
-        animationType="slide"
-      >
-        <Pressable onPress={() => setState(false)} style={styles.extraContent}>
-        </Pressable>
-
-        <View className={'h-1/2'} >
-          <View style={styles.card} >
-            <ScrollView >
-              {
-                data?.map((item, index) => (
-                  <Pressable className={'w-full'} key={index.toString()}
-                    onPress={() => setShowIndex(index)}
-                  >
-                    <View className={'w-full mb-5 flex flex-row justify-between px-5 items-center border-2 rounded-xl border-blue-600 bg-[#007FFF] h-[56px]'}>
-                      <View>
-                        <Text className='text-white' >
-                          {
-                            index === showIndex ? 'Основной лимит' : 'Доп. лимит'
-                          }
-                        </Text>
-                        <Text className='text-white' >
-                          {item?.month_text}
-                        </Text>
-                      </View>
-                      <View className='flex flex-row gap-2 items-center' >
-                        <Text className='text-white ml-2' >
-                          {formatSum(item?.limit)}
-                        </Text>
-                        <Text className='text-white'> UZS</Text>
-                        <Ionicons name={showIndex === index ? "radio-button-on" : 'radio-button-off'} color={showIndex === index ? 'blue' : 'white'} size={18} />
-                      </View>
-                    </View>
-                  </Pressable>
-                ))
-              }
-            </ScrollView>
-            <TouchableOpacity
-              className='bg-[#007FFF] p-[15px] rounded-[8px] w-[95%] mx-auto mt-[20px]'
-              onPress={() => setState(false)}
-            >
-              <Text
-                className={'text-white font-semibold text-center'}
+    <Modal
+      transparent={true}
+      animationType="fade"
+      visible={visible}
+      className={'relative'}
+      statusBarTranslucent={true}
+    >
+      <Pressable className='h-[55%]' style={styles.extrContent} onPress={closeMOdal} />
+      <View style={[styles.content, { backgroundColor: Th.black_bg_Color }]} className='h-[50%] relative -top-[5%] bg-white z-50 rounded-t-[30px] p-5 py-10' >
+        <ScrollView style={styles.card} >
+          {
+            data?.map((item, index) => (
+              <Pressable className={'w-full'} key={index.toString()}
+                onPress={() => setShowIndex(item?.guidFinProduct)}
               >
-                Выбрать лимит
-              </Text>
-            </TouchableOpacity>
-          </View>
+                <View className={`w-full mb-5 flex flex-row justify-between px-5 items-center border-2 rounded-xl h-[56px] ${(showIndex === item?.guidFinProduct) ? 'border-blue-600 bg-[#007FFF]' : 'border-gray-200 bg-[#EBEBEB]'}`}>
+                  <View>
+                    <Text className={`${showIndex === item?.guidFinProduct ? 'text-white' : 'text-zinc-900'} font-semibold `} >
+                      {
+                        showIndex === item?.guidFinProduct ? 'Основной лимит' : 'Доп. лимит'
+                      }
+                    </Text>
+                    <Text className={showIndex === item?.guidFinProduct ? 'text-white' : 'text-[#737373]'} >
+                      {item?.month_text}
+                    </Text>
+                  </View>
+                  <View className='flex flex-row gap-2 items-center' >
+                    <Text className={`${showIndex === item?.guidFinProduct ? 'text-white' : 'text-[#007FFF]'} ml-2`} >
+                      {formatSum(item?.limit)}
+                    </Text>
+                    <Text className={showIndex === item?.guidFinProduct ? 'text-white' : 'text-zinc-900'}> UZS</Text>
+                    <Ionicons name={showIndex === item?.guidFinProduct ? "radio-button-on" : 'radio-button-off'} color={showIndex === item?.guidFinProduct ? 'blue' : 'gray'} size={18} />
+                  </View>
+                </View>
+              </Pressable>
+            ))
+          }
+        </ScrollView>
+        <View>
+          <TouchableOpacity className='w-full flex items-center bg-[#007FFF] rounded-xl justify-center h-[56px]' onPress={closeMOdal}>
+            <Text className='text-white text-17'>
+              Выбрать лимит
+            </Text>
+          </TouchableOpacity>
         </View>
-
-      </Modal>
-    </View>
+      </View>
+    </Modal>
   );
 }
 
 const styles = StyleSheet.create({
-  card: {
-    width: "100%",
-    padding: 20,
-    backgroundColor: "white",
-    height: '100%',
-    borderTopLeftRadius: 50,
-    borderTopRightRadius: 50
-  },
-  content: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    height: "50%",
-    minHeight: "50%",
-    backgroundColor: "rgba(0,0,0, 0.7)",
-  },
-  extraContent: {
-    justifyContent: "center",
-    alignItems: "center",
-    minHeight: "50%",
-    backgroundColor: "rgba(0, 0, 0, 0.3)",
-  },
-  text: {
-    fontWeight: "600",
-    fontSize: 16,
-    color: "white",
+  extrContent: {
+    backgroundColor: 'rgba(0, 0, 0, 0.4)'
   },
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

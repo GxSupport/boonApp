@@ -10,10 +10,10 @@ const colorArray = {
     3: ['bg-cyan-700', 'bg-cyan-600'],
 }
 
-const Limit = ({ limit, setLimit, title = null, index = 0 }) => {
+const Limit = ({ limit, setState, title = null, index = 0 }) => {
     const { t } = useTranslation()
     return (
-        <View className={`w-11/12 rounded-2xl overflow-hidden z-10 ${colorArray?.[index] ? colorArray?.[index]?.[0] : colorArray?.[index -= 2]?.[0]} `} >
+        <View onTouchStart={() => setState(true)} className={`w-11/12 rounded-2xl overflow-hidden z-10 ${colorArray?.[index] ? colorArray?.[index]?.[0] : colorArray?.[index -= 2]?.[0]} `} >
             <View className={`absolute  w-40 h-40 rounded-full -mt-16 -ml-24 ${colorArray?.[index] ? colorArray?.[index]?.[1] : colorArray?.[index -= 2]?.[1]}`} >
             </View>
             <View className={'items-center pt-3 flex-row justify-center'}>

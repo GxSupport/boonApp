@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { Image, ScrollView, Text, View } from 'react-native'
 import Button from '../../../components/Button';
 import { useSelector } from 'react-redux';
-import { useNavigation } from 'expo-router';
+import { router, useNavigation, useRouter } from 'expo-router';
 import axios from 'axios';
 import { Token, URL } from '../../../api/const';
 import FlashMessage, { showMessage } from "react-native-flash-message";
@@ -12,7 +12,9 @@ import { Ionicons } from '@expo/vector-icons';
 import api from '../../../api/api';
 import { useTranslation } from 'react-i18next';
 import themeContext from '../../../theme/themeContext';
+import { useRoute } from '@react-navigation/native'
 function AddCard() {
+  const param = useRoute().params
   const navigation = useNavigation();
   const { t } = useTranslation()
   const [isLoading, setLoading] = useState(false)
@@ -36,6 +38,16 @@ function AddCard() {
   const activeTheme = (param) => setIsActiveTheme(param)
 
   useEffect(() => {
+    if (param) {
+      setInputValue(param?.card)
+    }
+    else {
+      setInputValue({
+        card_number: '',
+        card_expire: "",
+        task_id: ""
+      })
+    }
     navigation.setOptions({
       headerTitle: card ? t('edit_card') : t('add_card'),
     });
@@ -84,7 +96,7 @@ function AddCard() {
             </Text>
             <View>
               <TextInputMask
-                value={inputValue.card_number}
+                value={inputValue?.card_number}
                 onChangeText={(vlaue) => getInputValue('card_number', vlaue)}
                 type={'custom'}
                 inputMode={'numeric'}
@@ -95,7 +107,7 @@ function AddCard() {
                 keyboardType={'number-pad'}
                 placeholder={'0000 0000 0000 0000'}
               />
-              {inputValue.card_number.length > 0 &&
+              {inputValue?.card_number?.length > 0 &&
                 <View className={'absolute right-2 top-1/4'}>
                   <TouchableOpacity onPress={() => setInputValue({ ...inputValue, card_number: "" })}>
                     <Ionicons name="close-circle" size={22} color="gray" />
@@ -110,7 +122,7 @@ function AddCard() {
             </Text>
             <View>
               <TextInputMask
-                value={inputValue.card_expire}
+                value={inputValue?.card_expire}
                 onChangeText={(vlaue) => getInputValue('card_expire', vlaue)}
                 type={'custom'}
                 inputMode={'numeric'}
@@ -121,7 +133,7 @@ function AddCard() {
                 keyboardType={'number-pad'}
                 placeholder={'dd / mm'}
               />
-              {inputValue.card_expire.length > 0 &&
+              {inputValue?.card_expire?.length > 0 &&
                 <View className={'absolute right-2 top-1/4'}>
                   <TouchableOpacity onPress={() => setInputValue({ ...inputValue, card_expire: "" })}>
                     <Ionicons name="close-circle" size={22} color="gray" />
@@ -136,7 +148,7 @@ function AddCard() {
             </Text>
             <View>
               <TextInputMask
-                value={inputValue.task_id}
+                value={inputValue?.task_id}
                 onChangeText={(vlaue) => getInputValue('task_id', vlaue)}
                 type={'custom'}
                 inputMode={'numeric'}
@@ -147,7 +159,7 @@ function AddCard() {
                 keyboardType={'number-pad'}
                 placeholder={'00000'}
               />
-              {inputValue.task_id.length > 0 &&
+              {inputValue?.task_id?.length > 0 &&
                 <View className={'absolute right-2 top-1/4'}>
                   <TouchableOpacity onPress={() => setInputValue({ ...inputValue, task_id: "" })}>
                     <Ionicons name="close-circle" size={22} color="gray" />

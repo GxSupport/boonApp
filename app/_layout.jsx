@@ -36,7 +36,7 @@ export const Layout = () => {
 				headerBackTitleVisible: false,
 				headerBackground: () => <View className={'bg-bg-default h-full'} style={{ backgroundColor: Th.backgroundColor }} />,
 				headerTitle: t('product_info'),
-				headerTintColor: Th.color,
+				headerTintColor: Th.color, 
 			}} />
 			<Stack.Screen name="setting/account/[id]" options={{
 				headerBackTitleVisible: false,
@@ -66,7 +66,6 @@ export const Layout = () => {
 					headerBackground: () => <View className={'bg-bg-default h-full'} style={{ backgroundColor: Th.backgroundColor }} />,
 					headerTitleAlign: 'center',
 					headerTintColor: Th.color
-
 				}} />
 			<Stack.Screen name="setting/decor/[id]" options={{
 				headerBackTitleVisible: false,
