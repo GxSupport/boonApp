@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react'
-import { Image, ScrollView, Text, TextInput, View } from 'react-native'
+import React, { useContext, useEffect, useState } from 'react'
+import { Image, ScrollView, Text, View } from 'react-native'
 import Button from '../../../components/Button';
 import { useSelector } from 'react-redux';
-import { useNavigation } from 'expo-router';
+import { router, useNavigation, useRouter } from 'expo-router';
 import axios from 'axios';
 import { Token, URL } from '../../../api/const';
 import FlashMessage, { showMessage } from "react-native-flash-message";
@@ -10,11 +10,17 @@ import { TextInputMask } from 'react-native-masked-text';
 import { TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import api from '../../../api/api';
+import { useTranslation } from 'react-i18next';
+import themeContext from '../../../theme/themeContext';
+import { useRoute } from '@react-navigation/native'
 function AddCard() {
+  const param = useRoute().params
   const navigation = useNavigation();
+  const { t } = useTranslation()
   const [isLoading, setLoading] = useState(false)
   const { card } = useSelector(state => state.CardSlicer)
   const [isActiveTheme, setIsActiveTheme] = useState(0)
+  const Th = useContext(themeContext)
   const [inputValue, setInputValue] = useState({
     card_number: '',
     card_expire: "",
@@ -32,8 +38,18 @@ function AddCard() {
   const activeTheme = (param) => setIsActiveTheme(param)
 
   useEffect(() => {
+    if (param) {
+      setInputValue(param?.card)
+    }
+    else {
+      setInputValue({
+        card_number: '',
+        card_expire: "",
+        task_id: ""
+      })
+    }
     navigation.setOptions({
-      headerTitle: card ? "Редактировать карта" : "Добавить карта",
+      headerTitle: card ? t('edit_card') : t('add_card'),
     });
   }, [navigation, card]);
 
@@ -51,7 +67,6 @@ function AddCard() {
         method: 'POST',
         data: inputValue
       })
-      console.log(res);
       showMessage({
         message: "Successfully",
         type: "success",
@@ -68,31 +83,31 @@ function AddCard() {
     }
   }
   return (
-    <View className='flex flex-col items-stretch justify-between px-5 py-2 bg-bg-default h-full'>
-      <FlashMessage position="top" />
-      <ScrollView>
-        <Text className='text-17 text-[#171717]'>
-          Данные карты
+    <View className='p-2 h-full' style={{ backgroundColor: Th.backgroundColor }} >
+      <FlashMessage position="top" duration={3000} />
+      <ScrollView contentContainerStyle={{ borderRadius: 20, backgroundColor: Th.black_bg_Color, padding: 15, paddingBottom: 0 }} >
+        <Text className='text-17' style={{ color: Th.color }} >
+          {t('card_details')}
         </Text>
         <View className='my-4' >
           <View>
-            <Text className='text-11 mb-1' >
-              Номер карты
+            <Text className='text-11 my-1' style={{ color: Th.color }}>
+              {t('card_number')}
             </Text>
             <View>
               <TextInputMask
-                value={inputValue.card_number}
+                value={inputValue?.card_number}
                 onChangeText={(vlaue) => getInputValue('card_number', vlaue)}
                 type={'custom'}
                 inputMode={'numeric'}
                 options={{
                   mask: '9999 9999 9999 9999'
                 }}
-                className={' border border-border-1 bg-white rounded-md text-black  text-14   h-11 pl-2'}
+                className={' border border-border-1 bg-white rounded-md text-black  text-14 pr-10   h-11 pl-2'}
                 keyboardType={'number-pad'}
                 placeholder={'0000 0000 0000 0000'}
               />
-              {inputValue.card_number.length > 0 &&
+              {inputValue?.card_number?.length > 0 &&
                 <View className={'absolute right-2 top-1/4'}>
                   <TouchableOpacity onPress={() => setInputValue({ ...inputValue, card_number: "" })}>
                     <Ionicons name="close-circle" size={22} color="gray" />
@@ -102,23 +117,23 @@ function AddCard() {
             </View>
           </View>
           <View>
-            <Text className='text-11 mb-1' >
-              Срок действия карты
+            <Text className='text-11 my-1' style={{ color: Th.color }}>
+              {t('card_validity_period')}
             </Text>
             <View>
               <TextInputMask
-                value={inputValue.card_expire}
+                value={inputValue?.card_expire}
                 onChangeText={(vlaue) => getInputValue('card_expire', vlaue)}
                 type={'custom'}
                 inputMode={'numeric'}
                 options={{
                   mask: '99 / 99'
                 }}
-                className={' border border-border-1 bg-white rounded-md text-black  text-14   h-11 pl-2'}
+                className={' border border-border-1 bg-white rounded-md text-black  text-14 pr-10   h-11 pl-2'}
                 keyboardType={'number-pad'}
                 placeholder={'dd / mm'}
               />
-              {inputValue.card_expire.length > 0 &&
+              {inputValue?.card_expire?.length > 0 &&
                 <View className={'absolute right-2 top-1/4'}>
                   <TouchableOpacity onPress={() => setInputValue({ ...inputValue, card_expire: "" })}>
                     <Ionicons name="close-circle" size={22} color="gray" />
@@ -128,23 +143,23 @@ function AddCard() {
             </View>
           </View>
           <View>
-            <Text className='text-11 mb-1' >
-              Название карты
+            <Text className='text-11 my-1' style={{ color: Th.color }}>
+              {t('card_name')}
             </Text>
             <View>
               <TextInputMask
-                value={inputValue.task_id}
+                value={inputValue?.task_id}
                 onChangeText={(vlaue) => getInputValue('task_id', vlaue)}
                 type={'custom'}
                 inputMode={'numeric'}
                 options={{
                   mask: '9999'
                 }}
-                className={' border border-border-1 bg-white rounded-md text-black  text-14   h-11 pl-2'}
+                className={' border border-border-1 bg-white rounded-md text-black  text-14 pr-10 h-11 pl-2'}
                 keyboardType={'number-pad'}
                 placeholder={'00000'}
               />
-              {inputValue.task_id.length > 0 &&
+              {inputValue?.task_id?.length > 0 &&
                 <View className={'absolute right-2 top-1/4'}>
                   <TouchableOpacity onPress={() => setInputValue({ ...inputValue, task_id: "" })}>
                     <Ionicons name="close-circle" size={22} color="gray" />
@@ -154,10 +169,10 @@ function AddCard() {
             </View>
           </View>
           <View>
-            <Text className='text-17 my-3'>
-              Внешний вид
+            <Text className='text-17 my-3' style={{ color: Th.color }}>
+              {t('appearance')}
             </Text>
-            <View className='items-center gap-1 flex-row flex' >
+            <View className='items-center justify-center flex-wrap gap-1 flex-row flex' >
               {
                 cardTheme.map((item, index) => (
                   <View key={index} className={`w-12 h-12 overflow-hidden border-transparent border-2 p-0.5 rounded-full ${isActiveTheme === index && 'border-blue-300'} `} onTouchStart={() => activeTheme(index)} >
@@ -170,7 +185,7 @@ function AddCard() {
         </View>
       </ScrollView>
       <View>
-        <Button handle={submitCardinfo} text={card ? "Редактировать карта" : "Добавить карта"} loading={isLoading} />
+        <Button handle={submitCardinfo} text={card ? t('edit_card') : t('add_card')} loading={isLoading} />
       </View>
     </View>
   )
