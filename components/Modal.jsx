@@ -9,7 +9,6 @@ import themeContext from "../theme/themeContext";
 export default function ModalComponent({ visible, setState, data, _id }) {
   const [showIndex, setShowIndex] = React.useState(null);
   const Th = useContext(themeContext)
-
   useEffect(() => {
     setShowIndex(_id)
   }, [_id])
