@@ -16,7 +16,7 @@ import api from "../../api/api";
 const CardSlicer = createSlice({
   name: 'CardSlicer',
   initialState: {
-    card: { cardNumber: '1234 5678 9012 3456', cardType: 'Uzcard', validThru: '08/25', owner: "John Doe" },
+    card: { card_number: '1234 5678 9012 3456', cardType: 'Uzcard', card_expire: '08/25', owner: "John Doe", task_id: "0000" },
     isLoading: false,
     error: null
   },
