@@ -66,7 +66,7 @@ export default function Offert() {
             }
             {!permission_load &&
               <TouchableOpacity onPress={handlePermission}>
-                 <Text style={styles.text_color}> {t('give_permission')} </Text>
+                <Text style={styles.text_color}> {t('give_permission')} </Text>
               </TouchableOpacity>
             }
             <TouchableOpacity
